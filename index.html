@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<base href="Idle-Chemist">
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./index.css">
+    <link rel="shortcut icon" href="./img/favicon/favicon.ico" type="image/x-icon">
+    <script type="module" src="./index.js"></script>
+    <title>Idle Chemist</title>
+</head>
+<body>
+    <div class="topBar">
+        <div style="background-color: rgb(0, 39, 37);">
+            <p id="energyDisplayVarCorner" >[0] Energy</p>
+        </div>
+    </div>
+    <div class="sidenav">
+        <div id="overviewPageButton">
+            <p>Overview</p>
+        </div>
+        <div id="craftingPageButton">
+            <p>Crafting</p>
+        </div>
+        <div id="saveButton">
+            <p>Save</p>
+        </div>
+        <div id="loadButton">
+            <p>Load</p>
+        </div>
+    </div>
+    <br>
+    <div class="homePage page" id="homePage">
+        <h1 class="pageHeader">Overview</h1>
+    </div>
+    <div class="craftingPage page" id="craftingPage">
+        <h1 class="pageHeader" style="margin-bottom: 0; padding: 0;">Crafting</h1>
+        <h2 style="margin-bottom: 2px;">Production</h2>
+        <div class="productionList" id="productionList">
+            <img src="./img/button/production_empty.svg" alt="" id="production1">
+            <img src="./img/button/production_empty.svg" alt="" id="production2">
+            <img src="./img/button/production_empty.svg" alt="" id="production3">
+            <img src="./img/button/production_empty.svg" alt="" id="production4">
+            <img src="./img/button/production_empty.svg" alt="" id="production5">
+            <img src="./img/button/production_empty.svg" alt="" id="production6">
+            <img src="./img/button/production_empty.svg" alt="" id="production7">
+            <img src="./img/button/production_empty.svg" alt="" id="production8">
+            <img src="./img/button/production_empty.svg" alt="" id="production9">
+            <img src="./img/button/production_empty.svg" alt="" id="production10">
+            <img src="./img/button/production_empty.svg" alt="" id="production11">
+            <img src="./img/button/production_empty.svg" alt="" id="production12">
+            <img src="./img/button/production_empty.svg" alt="" id="production13">
+            <img src="./img/button/production_empty.svg" alt="" id="production14">
+            <img src="./img/button/production_empty.svg" alt="" id="production15">
+            <img src="./img/button/production_empty.svg" alt="" id="production16">
+            <img src="./img/button/production_empty.svg" alt="" id="production17">
+            <img src="./img/button/production_empty.svg" alt="" id="production18">
+            <img src="./img/button/production_empty.svg" alt="" id="production19">
+            <img src="./img/button/production_empty.svg" alt="" id="production20">
+            <img src="./img/button/production_empty.svg" alt="" id="production21">
+            <img src="./img/button/production_empty.svg" alt="" id="production22">
+            <img src="./img/button/production_empty.svg" alt="" id="production23">
+            <img src="./img/button/production_empty.svg" alt="" id="production24">
+            <img src="./img/button/production_empty.svg" alt="" id="production25">
+            <img src="./img/button/production_empty.svg" alt="" id="production26">
+        </div>
+        <br><br>
+        <div class="craftingBondPreviewContainer">
+            <div class="craftingBondPreview" id="craftingBondPreview">
+                <p class="craftingBondPreviewText" id="craftingBondPreviewText">[craftingBondPreviewText]</p>
+                <p class="craftingBondPreviewName" id="craftingBondPreviewName">[craftingBondPreviewName]</p>
+            </div>
+            <img src="./img/button/red_c_button.svg" alt="" class="craftingBondPreviewClearButton" id="craftingBondPreviewClearButton">
+            <img src="./img/button/arrow_square_red.svg" alt="" class="craftingBondRegisterButton" id="craftingBondRegisterButton">
+        </div>
+        <br><br>
+        <div class="bondCraftingPeriodicTable">
+            <div class="craftingBondPeriodicTableRow">
+                <img src="./img/PeriodicTableElements/H.svg" alt="" id="elementH">
+                <img src="./img/PeriodicTableElements/presets/empty.svg" alt="">
+                <img src="./img/PeriodicTableElements/presets/empty.svg" alt="">
+    
+                <img src="./img/PeriodicTableElements/presets/empty.svg" alt="">
+    
+                <img src="./img/PeriodicTableElements/presets/empty.svg" alt=""">
+                <img src="./img/PeriodicTableElements/presets/empty.svg" alt=""">
+                <img src="./img/PeriodicTableElements/presets/empty.svg" alt=""">
+                <img src="./img/PeriodicTableElements/presets/empty.svg" alt=""">
+                <img src="./img/PeriodicTableElements/presets/empty.svg" alt=""">
+                <img src="./img/PeriodicTableElements/presets/empty.svg" alt=""">
+                <img src="./img/PeriodicTableElements/presets/empty.svg" alt=""">
+                <img src="./img/PeriodicTableElements/presets/empty.svg" alt=""">
+                <img src="./img/PeriodicTableElements/presets/empty.svg" alt=""">
+                <img src="./img/PeriodicTableElements/presets/empty.svg" alt=""">
+                <img src="./img/PeriodicTableElements/presets/empty.svg" alt=""">
+                <img src="./img/PeriodicTableElements/presets/empty.svg" alt=""">
+                <img src="./img/PeriodicTableElements/presets/empty.svg" alt=""">
+                <img src="./img/PeriodicTableElements/presets/empty.svg" alt=""">
+                <img src="./img/PeriodicTableElements/H.svg" alt="" id="elementHe">
+            </div>
+            <div class="craftingBondPeriodicTableRow">
+                <img src="./img/PeriodicTableElements/Li.svg" alt="" id="elementLi">
+                <img src="./img/PeriodicTableElements/Be.svg" alt="" id="elementBe">
+                <img src="./img/PeriodicTableElements/presets/empty.svg" alt="">
+    
+                <img src="./img/PeriodicTableElements/presets/empty.svg" alt="">
+    
+                <img src="./img/PeriodicTableElements/presets/empty.svg" alt="">
+                <img src="./img/PeriodicTableElements/presets/empty.svg" alt="">
+                <img src="./img/PeriodicTableElements/presets/empty.svg" alt="">
+                <img src="./img/PeriodicTableElements/presets/empty.svg" alt="">
+                <img src="./img/PeriodicTableElements/presets/empty.svg" alt="">
+                <img src="./img/PeriodicTableElements/presets/empty.svg" alt="">
+                <img src="./img/PeriodicTableElements/presets/empty.svg" alt="">
+                <img src="./img/PeriodicTableElements/presets/empty.svg" alt="">
+                <img src="./img/PeriodicTableElements/presets/empty.svg" alt="">
+                <img src="./img/PeriodicTableElements/B.svg" alt="" id="elementB">
+                <img src="./img/PeriodicTableElements/C.svg" alt="" id="elementC">
+                <img src="./img/PeriodicTableElements/N.svg" alt="" id="elementN">
+                <img src="./img/PeriodicTableElements/O.svg" alt="" id="elementO">
+                <img src="./img/PeriodicTableElements/F.svg" alt="" id="elementF">
+                <img src="./img/PeriodicTableElements/Ne.svg" alt="" id="elementNe">
+            </div>
+            <div class="craftingBondPeriodicTableRow">
+                <img src="./img/PeriodicTableElements/Na.svg" alt="" id="elementNa">
+                <img src="./img/PeriodicTableElements/Mg.svg" alt="" id="elementMg">
+                <img src="./img/PeriodicTableElements/presets/empty.svg" alt="">
+    
+                <img src="./img/PeriodicTableElements/presets/empty.svg" alt="">
+    
+                <img src="./img/PeriodicTableElements/presets/empty.svg" alt="">
+                <img src="./img/PeriodicTableElements/presets/empty.svg" alt="">
+                <img src="./img/PeriodicTableElements/presets/empty.svg" alt="">
+                <img src="./img/PeriodicTableElements/presets/empty.svg" alt="">
+                <img src="./img/PeriodicTableElements/presets/empty.svg" alt="">
+                <img src="./img/PeriodicTableElements/presets/empty.svg" alt="">
+                <img src="./img/PeriodicTableElements/presets/empty.svg" alt="">
+                <img src="./img/PeriodicTableElements/presets/empty.svg" alt="">
+                <img src="./img/PeriodicTableElements/presets/empty.svg" alt="">
+                <img src="./img/PeriodicTableElements/Al.svg" alt="" id="elementAl">
+                <img src="./img/PeriodicTableElements/Si.svg" alt="" id="elementSi">
+                <img src="./img/PeriodicTableElements/P.svg" alt="" id="elementP">
+                <img src="./img/PeriodicTableElements/S.svg" alt="" id="elementS">
+                <img src="./img/PeriodicTableElements/Cl.svg" alt="" id="elementCl">
+                <img src="./img/PeriodicTableElements/Ar.svg" alt="" id="elementAr">
+            </div>
+            <div class="craftingBondPeriodicTableRow">
+                <img src="./img/PeriodicTableElements/K.svg" alt="" id="elementK">
+                <img src="./img/PeriodicTableElements/Ca.svg" alt="" id="elementCa">
+                <img src="./img/PeriodicTableElements/Sc.svg" alt="" id="elementSc">
+    
+                <img src="./img/PeriodicTableElements/presets/empty.svg" alt="">
+    
+                <img src="./img/PeriodicTableElements/Ti.svg" alt="" id="elementTi">
+                <img src="./img/PeriodicTableElements/V.svg" alt="" id="elementV">
+                <img src="./img/PeriodicTableElements/Cr.svg" alt="" id="elementCr">
+                <img src="./img/PeriodicTableElements/Mn.svg" alt="" id="elementMn">
+                <img src="./img/PeriodicTableElements/Fe.svg" alt="" id="elementFe">
+                <img src="./img/PeriodicTableElements/Co.svg" alt="" id="elementCo">
+                <img src="./img/PeriodicTableElements/Ni.svg" alt="" id="elementNi">
+                <img src="./img/PeriodicTableElements/Cu.svg" alt="" id="elementCu">
+                <img src="./img/PeriodicTableElements/Zn.svg" alt="" id="elementZn">
+                <img src="./img/PeriodicTableElements/Ga.svg" alt="" id="elementGa">
+                <img src="./img/PeriodicTableElements/Ge.svg" alt="" id="elementGe">
+                <img src="./img/PeriodicTableElements/As.svg" alt="" id="elementAs">
+                <img src="./img/PeriodicTableElements/Se.svg" alt="" id="elementSe">
+                <img src="./img/PeriodicTableElements/Br.svg" alt="" id="elementBr">
+                <img src="./img/PeriodicTableElements/Kr.svg" alt="" id="elementKr">
+            </div>
+            <div class="craftingBondPeriodicTableRow">
+                <img src="./img/PeriodicTableElements/Rb.svg" alt="" id="elementRb">
+                <img src="./img/PeriodicTableElements/Sr.svg" alt="" id="elementSr">
+                <img src="./img/PeriodicTableElements/Y.svg" alt="" id="elementY">
+    
+                <img src="./img/PeriodicTableElements/presets/empty.svg" alt="">
+    
+                <img src="./img/PeriodicTableElements/Zr.svg" alt="" id="elementZr">
+                <img src="./img/PeriodicTableElements/Nb.svg" alt="" id="elementNb">
+                <img src="./img/PeriodicTableElements/Mo.svg" alt="" id="elementMo">
+                <img src="./img/PeriodicTableElements/Tc.svg" alt="" id="elementTc">
+                <img src="./img/PeriodicTableElements/Ru.svg" alt="" id="elementRu">
+                <img src="./img/PeriodicTableElements/Rh.svg" alt="" id="elementRh">
+                <img src="./img/PeriodicTableElements/Pd.svg" alt="" id="elementPd">
+                <img src="./img/PeriodicTableElements/Ag.svg" alt="" id="elementAg">
+                <img src="./img/PeriodicTableElements/Cd.svg" alt="" id="elementCd">
+                <img src="./img/PeriodicTableElements/In.svg" alt="" id="elementIn">
+                <img src="./img/PeriodicTableElements/Sn.svg" alt="" id="elementSn">
+                <img src="./img/PeriodicTableElements/Sb.svg" alt="" id="elementSb">
+                <img src="./img/PeriodicTableElements/Te.svg" alt="" id="elementTe">
+                <img src="./img/PeriodicTableElements/I.svg" alt="" id="elementI">
+                <img src="./img/PeriodicTableElements/Xe.svg" alt="" id="elementXe">
+            </div>
+            <div class="craftingBondPeriodicTableRow">
+                <img src="./img/PeriodicTableElements/Cs.svg" alt="" id="elementCs">
+                <img src="./img/PeriodicTableElements/Ba.svg" alt="" id="elementBa">
+                <img src="./img/PeriodicTableElements/La.svg" alt="" id="elementLa">
+    
+                <img src="./img/PeriodicTableElements/presets/empty.svg" alt="">
+    
+                <img src="./img/PeriodicTableElements/Hf.svg" alt="" id="elementHf">
+                <img src="./img/PeriodicTableElements/Ta.svg" alt="" id="elementTa">
+                <img src="./img/PeriodicTableElements/W.svg" alt="" id="elementW">
+                <img src="./img/PeriodicTableElements/Re.svg" alt="" id="elementRe">
+                <img src="./img/PeriodicTableElements/Os.svg" alt="" id="elementOs">
+                <img src="./img/PeriodicTableElements/Ir.svg" alt="" id="elementIr">
+                <img src="./img/PeriodicTableElements/Pt.svg" alt="" id="elementPt">
+                <img src="./img/PeriodicTableElements/Au.svg" alt="" id="elementAu">
+                <img src="./img/PeriodicTableElements/Hg.svg" alt="" id="elementHg">
+                <img src="./img/PeriodicTableElements/Tl.svg" alt="" id="elementTl">
+                <img src="./img/PeriodicTableElements/Pb.svg" alt="" id="elementPb">
+                <img src="./img/PeriodicTableElements/Bi.svg" alt="" id="elementBi">
+                <img src="./img/PeriodicTableElements/Po.svg" alt="" id="elementPo">
+                <img src="./img/PeriodicTableElements/At.svg" alt="" id="elementAt">
+                <img src="./img/PeriodicTableElements/Rn.svg" alt="" id="elementRn">
+            </div>
+            <div class="craftingBondPeriodicTableRow">
+                <img src="./img/PeriodicTableElements/Fr.svg" alt="" id="elementFr">
+                <img src="./img/PeriodicTableElements/Ra.svg" alt="" id="elementRa">
+                <img src="./img/PeriodicTableElements/Ac.svg" alt="" id="elementAc">
+    
+                <img src="./img/PeriodicTableElements/presets/empty.svg" alt="">
+    
+                <img src="./img/PeriodicTableElements/Rf.svg" alt="" id="elementRf">
+                <img src="./img/PeriodicTableElements/Db.svg" alt="" id="elementDb">
+                <img src="./img/PeriodicTableElements/Sg.svg" alt="" id="elementSg">
+                <img src="./img/PeriodicTableElements/Bh.svg" alt="" id="elementBh">
+                <img src="./img/PeriodicTableElements/Hs.svg" alt="" id="elementHs">
+                <img src="./img/PeriodicTableElements/Mt.svg" alt="" id="elementMt">
+                <img src="./img/PeriodicTableElements/Ds.svg" alt="" id="elementDs">
+                <img src="./img/PeriodicTableElements/Rg.svg" alt="" id="elementRg">
+                <img src="./img/PeriodicTableElements/Cn.svg" alt="" id="elementCn">
+                <img src="./img/PeriodicTableElements/Nh.svg" alt="" id="elementNh">
+                <img src="./img/PeriodicTableElements/Fl.svg" alt="" id="elementFl">
+                <img src="./img/PeriodicTableElements/Mc.svg" alt="" id="elementMc">
+                <img src="./img/PeriodicTableElements/Lv.svg" alt="" id="elementLv">
+                <img src="./img/PeriodicTableElements/Ts.svg" alt="" id="elementTs">
+                <img src="./img/PeriodicTableElements/Og.svg" alt="" id="elementOg">
+            </div>
+            <div class="craftingBondPeriodicTableRow">
+                <img src="./img/PeriodicTableElements/presets/empty.svg" alt="">
+                <img src="./img/PeriodicTableElements/presets/empty.svg" alt="">
+                <img src="./img/PeriodicTableElements/presets/empty.svg" alt="">
+    
+                <img src="./img/PeriodicTableElements/presets/empty.svg" alt="">
+    
+                <img src="./img/PeriodicTableElements/presets/empty.svg" alt="">
+                <img src="./img/PeriodicTableElements/presets/empty.svg" alt="">
+                <img src="./img/PeriodicTableElements/presets/empty.svg" alt="">
+                <img src="./img/PeriodicTableElements/presets/empty.svg" alt="">
+                <img src="./img/PeriodicTableElements/presets/empty.svg" alt="">
+                <img src="./img/PeriodicTableElements/presets/empty.svg" alt="">
+                <img src="./img/PeriodicTableElements/presets/empty.svg" alt="">
+                <img src="./img/PeriodicTableElements/presets/empty.svg" alt="">
+                <img src="./img/PeriodicTableElements/presets/empty.svg" alt="">
+                <img src="./img/PeriodicTableElements/presets/empty.svg" alt="">
+                <img src="./img/PeriodicTableElements/presets/empty.svg" alt="">
+                <img src="./img/PeriodicTableElements/presets/empty.svg" alt="">
+                <img src="./img/PeriodicTableElements/presets/empty.svg" alt="">
+                <img src="./img/PeriodicTableElements/presets/empty.svg" alt="">
+                <img src="./img/PeriodicTableElements/presets/empty.svg" alt="">
+            </div>
+            <div class="craftingBondPeriodicTableRow">
+                <img src="./img/PeriodicTableElements/presets/empty.svg" alt="">
+                <img src="./img/PeriodicTableElements/presets/empty.svg" alt="">
+                <img src="./img/PeriodicTableElements/presets/empty.svg" alt="">
+    
+                <img src="./img/PeriodicTableElements/presets/empty.svg" alt="">
+                
+                <img src="./img/PeriodicTableElements/Ce.svg" alt="" id="elementCe">
+                <img src="./img/PeriodicTableElements/Pr.svg" alt="" id="elementPr">
+                <img src="./img/PeriodicTableElements/Nd.svg" alt="" id="elementNd">
+                <img src="./img/PeriodicTableElements/Pm.svg" alt="" id="elementPm">
+                <img src="./img/PeriodicTableElements/Sm.svg" alt="" id="elementSm">
+                <img src="./img/PeriodicTableElements/Eu.svg" alt="" id="elementEu">
+                <img src="./img/PeriodicTableElements/Gd.svg" alt="" id="elementGd">
+                <img src="./img/PeriodicTableElements/Tb.svg" alt="" id="elementTb">
+                <img src="./img/PeriodicTableElements/Dy.svg" alt="" id="elementDy">
+                <img src="./img/PeriodicTableElements/Ho.svg" alt="" id="elementHo">
+                <img src="./img/PeriodicTableElements/Er.svg" alt="" id="elementEr">
+                <img src="./img/PeriodicTableElements/Tm.svg" alt="" id="elementTm">
+                <img src="./img/PeriodicTableElements/Yb.svg" alt="" id="elementYb">
+                <img src="./img/PeriodicTableElements/Lu.svg" alt="" id="elementLu">
+                <img src="./img/PeriodicTableElements/presets/empty.svg" alt="">
+            </div>
+            <div class="craftingBondPeriodicTableRow">
+                <img src="./img/PeriodicTableElements/presets/empty.svg" alt="">
+                <img src="./img/PeriodicTableElements/presets/empty.svg" alt="">
+                <img src="./img/PeriodicTableElements/presets/empty.svg" alt="">
+    
+                <img src="./img/PeriodicTableElements/presets/empty.svg" alt="">
+    
+                <img src="./img/PeriodicTableElements/Th.svg" alt="" id="elementTh">
+                <img src="./img/PeriodicTableElements/Pa.svg" alt="" id="elementPa">
+                <img src="./img/PeriodicTableElements/U.svg" alt="" id="elementU">
+                <img src="./img/PeriodicTableElements/Np.svg" alt="" id="elementNp">
+                <img src="./img/PeriodicTableElements/Pu.svg" alt="" id="elementPu">
+                <img src="./img/PeriodicTableElements/Am.svg" alt="" id="elementAm">
+                <img src="./img/PeriodicTableElements/Cm.svg" alt="" id="elementCm">
+                <img src="./img/PeriodicTableElements/Bk.svg" alt="" id="elementBk">
+                <img src="./img/PeriodicTableElements/Cf.svg" alt="" id="elementCf">
+                <img src="./img/PeriodicTableElements/Es.svg" alt="" id="elementEs">
+                <img src="./img/PeriodicTableElements/Fm.svg" alt="" id="elementFm">
+                <img src="./img/PeriodicTableElements/Md.svg" alt="" id="elementMd">
+                <img src="./img/PeriodicTableElements/No.svg" alt="" id="elementNo">
+                <img src="./img/PeriodicTableElements/Lr.svg" alt="" id="elementLr">
+                <img src="./img/PeriodicTableElements/presets/empty.svg" alt="">
+            </div>
+        </div>
+    </div>
+</body>
+</html> 

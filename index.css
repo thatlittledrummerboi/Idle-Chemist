@@ -1,0 +1,170 @@
+/* ###### */
+/* GLOBAL */
+/* ###### */
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    color: white;
+    background-color: #101010;
+    margin: 0;
+}
+
+.sidenav {
+    width: 15%;
+    max-width: 150px;
+    min-width: 80px;
+    position: fixed;
+    left: 0;
+    top: 30px;
+    background-color: #000;
+}
+
+.sidenav div {
+    padding: 15px 0px 15px 18px;
+    border: 1px solid white;
+    transition: 0.6s cubic-bezier(.17,.67,.56,.99);
+}
+
+.sidenav div p {
+    margin: 0;
+    padding: 0;
+    font-size: 18px;
+}
+
+.sidenav div:hover {
+    padding-left: 26px;
+    background-color: #222;
+    transition: 0.6s cubic-bezier(.17,.67,.56,.99);
+}
+
+.pageHeader {
+    text-align: center;
+}
+
+.topBar {
+    display: inline-block;
+    align-items: center;
+    height: 30px;
+    border-bottom: 1px solid white;
+    width: 100%;
+    overflow: hidden;
+    padding: 0;
+    position: fixed;
+    background-color: #070020;
+}
+
+.topBar div {
+    padding: 5px 20px 0px 20px;
+    float: left;
+    margin: 0;
+    border-right: 1px solid white;
+    align-items: center;
+    height: 100%;
+    text-align: center;
+}
+
+.topBar div p {
+    margin: auto;
+    padding: 0;
+}
+
+.page {
+    margin: 0 20% 0 20%;
+}
+
+/* #### */
+/* HOME */
+/* #### */
+
+.homePage {
+    text-align: center;
+}
+
+/* ######## */
+/* SETTINGS */
+/* ######## */
+
+
+
+/* ######## */
+/* CRAFTING */
+/* ######## */
+
+.craftingBondPreview {
+    width: 84%;
+    border: 1px solid white;
+    height: 40px;
+    display: flex;
+}
+
+.craftingBondPreviewText {
+    padding: 0 0 0 2px;
+    margin: 0;
+    font-size: 33px;
+}
+
+.craftingBondPreviewName {
+    margin: 0 0 0 auto;
+    padding: 10px 2px 0 0;
+}
+
+.craftingBondRegisterButton {
+    width: 40px;
+    margin-left: auto;
+}
+
+.craftingBondPreviewClearButton {
+    width: 40px;
+    margin-left: auto;
+}
+
+.craftingBondPreviewContainer {
+    display: flex;
+}
+
+.craftingBondPeriodicTable{
+    align-items: center;
+    justify-content: center;
+}
+
+.craftingBondPeriodicTableRow {
+    display: flex;
+}
+
+.craftingBondPeriodicTableRow img {
+    width: 4.6%;
+    min-width: 26px;
+    padding: 2px 2px 2px 2px;
+}
+
+.productionList {
+    border: 1px solid white;
+    width: 100%;
+}
+
+.productionList img {
+    width: 40px;
+    padding: 3px 0 0 3px;
+    margin: 0;
+}
+
+/* ##### */
+/* ABOUT */
+/* ##### */
+
+.aboutHeader {
+    text-align: center;
+}
+
+.aboutText {
+    font-size: 14px;
+}
+
+.aboutText a {
+    text-decoration: none;
+    color: red;
+}
+
+.aboutText a:hover {
+    color: rgb(255, 72, 72);
+}
