@@ -22,6 +22,9 @@
         <div id="craftingPageButton">
             <p>Crafting</p>
         </div>
+        <div id="inventoryPageButton">
+            <p>Inventory</p>
+        </div>
         <div id="saveButton">
             <p>Save</p>
         </div>
@@ -37,32 +40,6 @@
         <h1 class="pageHeader" style="margin-bottom: 0; padding: 0;">Crafting</h1>
         <h2 style="margin-bottom: 2px;">Production</h2>
         <div class="productionList" id="productionList">
-            <img src="./img/button/production_empty.svg" alt="" id="production1">
-            <img src="./img/button/production_empty.svg" alt="" id="production2">
-            <img src="./img/button/production_empty.svg" alt="" id="production3">
-            <img src="./img/button/production_empty.svg" alt="" id="production4">
-            <img src="./img/button/production_empty.svg" alt="" id="production5">
-            <img src="./img/button/production_empty.svg" alt="" id="production6">
-            <img src="./img/button/production_empty.svg" alt="" id="production7">
-            <img src="./img/button/production_empty.svg" alt="" id="production8">
-            <img src="./img/button/production_empty.svg" alt="" id="production9">
-            <img src="./img/button/production_empty.svg" alt="" id="production10">
-            <img src="./img/button/production_empty.svg" alt="" id="production11">
-            <img src="./img/button/production_empty.svg" alt="" id="production12">
-            <img src="./img/button/production_empty.svg" alt="" id="production13">
-            <img src="./img/button/production_empty.svg" alt="" id="production14">
-            <img src="./img/button/production_empty.svg" alt="" id="production15">
-            <img src="./img/button/production_empty.svg" alt="" id="production16">
-            <img src="./img/button/production_empty.svg" alt="" id="production17">
-            <img src="./img/button/production_empty.svg" alt="" id="production18">
-            <img src="./img/button/production_empty.svg" alt="" id="production19">
-            <img src="./img/button/production_empty.svg" alt="" id="production20">
-            <img src="./img/button/production_empty.svg" alt="" id="production21">
-            <img src="./img/button/production_empty.svg" alt="" id="production22">
-            <img src="./img/button/production_empty.svg" alt="" id="production23">
-            <img src="./img/button/production_empty.svg" alt="" id="production24">
-            <img src="./img/button/production_empty.svg" alt="" id="production25">
-            <img src="./img/button/production_empty.svg" alt="" id="production26">
         </div>
         <br><br>
         <div class="craftingBondPreviewContainer">
@@ -96,7 +73,7 @@
                 <img src="./img/PeriodicTableElements/presets/empty.svg" alt=""">
                 <img src="./img/PeriodicTableElements/presets/empty.svg" alt=""">
                 <img src="./img/PeriodicTableElements/presets/empty.svg" alt=""">
-                <img src="./img/PeriodicTableElements/H.svg" alt="" id="elementHe">
+                <img src="./img/PeriodicTableElements/He.svg" alt="" id="elementHe">
             </div>
             <div class="craftingBondPeriodicTableRow">
                 <img src="./img/PeriodicTableElements/Li.svg" alt="" id="elementLi">
@@ -305,6 +282,16 @@
                 <img src="./img/PeriodicTableElements/Lr.svg" alt="" id="elementLr">
                 <img src="./img/PeriodicTableElements/presets/empty.svg" alt="">
             </div>
+        </div>
+    </div>
+    <div class="inventoryPage page" id="inventoryPage">
+        <h1 class="pageHeader">Inventory</h1>
+        <div class="elementBuyPercentageContainer">
+            <p>Buy with <span id="elementBuyPercentagePreview">[%]</span>% of Energy<p>
+            <input type="range" name="" min="0" max="100" value="30" id="elementBuyPercentage">
+        </div>
+        <br><br>
+        <div class="elementInventory" id="elementInventory">
         </div>
     </div>
 </body>
