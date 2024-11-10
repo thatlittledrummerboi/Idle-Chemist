@@ -9,6 +9,6 @@
 * converted element count to Decimal()
 * Added Progress bars to Production
 
-### Version 0.3-BETA (Draft)
+### Version 0.2.1-BETA
 * Fixed bug: invalid crafting bond breaks production item
 * changed production item structure
