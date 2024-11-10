@@ -8,3 +8,7 @@
 * Introduced Unlocking
 * converted element count to Decimal()
 * Added Progress bars to Production
+
+### Version 0.3-BETA (Draft)
+* Fixed bug: invalid crafting bond breaks production item
+* changed production item structure

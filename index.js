@@ -7,7 +7,7 @@ const ts = new Date()
 var game = {
     activeCooldowns : {
     },
-    version: "v0.1-BETA",
+    version: "v0.3-BETA_PREVIEW-1",
     currentPage: 1,
     craftingBondPreview: {
         text: "",
@@ -30,6 +30,7 @@ var player = {
     settings: {
         framerate: 24,
     },
+    ignoreTimestampFromSave: false,
 }
 
 function calculateElementCost(elementKey) {
@@ -159,12 +160,14 @@ function drawValues() {
         for (let i = 0; i<player.production.length; i++) {
             if (player.production[i] == null) document.getElementById(`production${i+1}`).style.display = "none";
             else if (player.production[i] == "") {
-                document.getElementById(`productionButton${i+1}`).src = "./img/button/production_empty.svg";
+                document.getElementById(`production${i+1}Image`).src = "./img/button/production_empty.svg";
                 document.getElementById(`production${i+1}Progress`).removeAttribute('value');
+                document.getElementById(`production${i+1}Text`).innerHTML = "";
             }
             else {
-                document.getElementById(`productionButton${i+1}`).src = `./img/button/production/${player.production[i]}.svg`; 
+                document.getElementById(`production${i+1}Image`).src = "./img/button/production_filled.svg";
                 document.getElementById(`production${i+1}Progress`).value = isFinite(game.activeCooldowns[player.production[i]] / getCooldownDuration(player.production[i])) ? game.activeCooldowns[player.production[i]] / getCooldownDuration(player.production[i]) : null;
+                document.getElementById(`production${i+1}Text`).innerHTML = player.production[i];
             }
 
         }   
@@ -201,25 +204,25 @@ function productionItemClickEvent(id) {
         game.selectedProductionItem = id;
     
         for (let i = 0; i<player.production.length; i++) {
-            document.getElementById(`productionButton${i+1}`).style.filter = game.selectedProductionItem == i ? "grayscale(50%)" : "grayscale(0%)";
+            document.getElementById(`production${i+1}Image`).style.filter = game.selectedProductionItem == i ? "grayscale(50%)" : "grayscale(0%)";
         }
         return;
     }
 
     game.selectedProductionItem = null;
-    console.log('a')
     for (let i = 0; i<player.production.length; i++) {
-        document.getElementById(`productionButton${i+1}`).style.filter = "grayscale(0%)";
+        document.getElementById(`production${i+1}Image`).style.filter = "grayscale(0%)";
     }
 }
 
 function craftingBondRegister() {
     if (game.selectedProductionItem == null) return;
+    if (!(game.craftingBondPreview.text in data.bonds)) return
 
     player.production[game.selectedProductionItem] = game.craftingBondPreview.text;
     game.selectedProductionItem = null;
     for (let i = 0; i<player.production.length; i++) {
-        document.getElementById(`productionButton${i+1}`).style.filter = "grayscale(0%)";
+        document.getElementById(`production${i+1}Image`).style.filter = "grayscale(0%)";
     }
     for (const elementKey in player.elements) game.craftingBondPreview[elementKey] = 0;
 }
@@ -242,7 +245,7 @@ function save(destination) {
         //cookie
     } else if (destination == 1) {
         const a = document.createElement('a');
-        a.download = "save_" + game.currentTimestamp + ".json";
+        a.download = "save_" + ts.getTime() + ".json";
         a.href = `data:application/payload,${window.encodeURIComponent(payload)}`;
         a.click();
         a.remove();
@@ -284,16 +287,31 @@ window.onload = () => {
     }
 
     let x = "";
-    for (let elementKey in player.elements) x = x + `<div class="elementInventoryItem" id="elementInventoryItem${elementKey}"><img src="./img/PeriodicTableElements/${elementKey}.svg" alt="" id="elementInventoryItemImage${elementKey}"><p id="elementInventoryItemCount${elementKey}">Count: [0]</p><button id=elementPurchase${elementKey}>[buy]</button><br><br></div>`;
+    for (let elementKey in player.elements) x = x + `
+        <div class="elementInventoryItem" id="elementInventoryItem${elementKey}">
+            <img src="./img/PeriodicTableElements/${elementKey}.svg" id="elementInventoryItemImage${elementKey}">
+            <p id="elementInventoryItemCount${elementKey}">Count: [0]</p>
+            <button id=elementPurchase${elementKey}>[buy]</button>
+            <br><br>
+        </div>
+    `;
     document.getElementById('elementInventory').innerHTML = x;
 
     for (let elementKey in player.elements) document.getElementById(`elementPurchase${elementKey}`).addEventListener("click", () => attemptElementPurchase(elementKey));
 
     let y = "";
-    for (let i = 0; i<player.production.length; i++) y = y + `<div id="production${i+1}"><img src="./img/button/production_empty.svg" id="productionButton${i+1}"><progress min="0" max="1" id="production${i+1}Progress"></progress></div>`;
+    for (let i = 0; i<player.production.length; i++) y = y + `
+        <div id="production${i+1}">
+            <div id="production${i+1}Button">
+                <img src="./img/button/production_empty.svg" id="production${i+1}Image">
+                <p id="production${i+1}Text">null</p>
+            </div>
+            <progress id="production${i+1}Progress"></progress>
+        </div>
+    `;
     document.getElementById('productionList').innerHTML = y;
 
-    for (let i = 0; i<player.production.length; i++) document.getElementById(`productionButton${i+1}`).addEventListener("click", () => productionItemClickEvent(i));
+    for (let i = 0; i<player.production.length; i++) document.getElementById(`production${i+1}Button`).addEventListener("click", () => productionItemClickEvent(i));
 
     setInterval(frame, 1000/player.settings.framerate);
 };

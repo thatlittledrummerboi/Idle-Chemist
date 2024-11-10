@@ -146,16 +146,27 @@ body {
 
 .productionList div {
     width: 40px;
-    padding-left: 5px;
-    padding-top: 5px;
+    padding: 3px 0px 0px 3px;
 }
 
-.productionList div img {
+.productionList div div {
+    position: relative;
+    text-align: center;
+}
+
+.productionList div div p {
+    position: absolute;
+    top: -2px;
+    left: 18%;
+}
+
+.productionList div div img {
     width: 100%;
 }
 
 .productionList div progress {
     width: 100%;
+    transform: translateX(3px);
 }
 
 /* ######### */
