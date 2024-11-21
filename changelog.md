@@ -1,7 +1,10 @@
 # Version Log
 
-### Version 0.1-BETA
-* initial release
+### Version 0.3-BETA (DRAFT)
+
+### Version 0.2.1-BETA
+* Fixed bug: invalid crafting bond breaks production item
+* changed production item structure
 
 ### Version 0.2-BETA
 * Introduced inventory
@@ -9,6 +12,6 @@
 * converted element count to Decimal()
 * Added Progress bars to Production
 
-### Version 0.2.1-BETA
-* Fixed bug: invalid crafting bond breaks production item
-* changed production item structure
+### Version 0.1-BETA
+* initial release
+

@@ -10,9 +10,10 @@
     <title>Idle Chemist</title>
 </head>
 <body>
+<div class="game" id="game">
     <div class="topBar">
         <div style="background-color: rgb(0, 39, 37);">
-            <p id="energyDisplayVarCorner" >[0] Energy</p>
+            <p id="energyDisplayVarCorner" >&Energy</p>
         </div>
     </div>
     <div class="sidenav">
@@ -39,39 +40,12 @@
     <div class="craftingPage page" id="craftingPage">
         <h1 class="pageHeader" style="margin-bottom: 0; padding: 0;">Crafting</h1>
         <h2 style="margin-bottom: 2px;">Production</h2>
-        <div class="productionList" id="productionList">
-            <div>
-                <div>
-                    <img src="./img//button/production_empty.svg" alt="">
-                    <p>Test</p>
-                </div>
-                <progress></progress>
-            </div>
-            <div>
-                <div>
-                    <img src="./img//button/production_empty.svg" alt="">
-                    <p>Test</p>
-                </div>
-                <progress></progress>
-            </div>
-            <!--
-            
-                
-            <div id=production{i+1}>
-                <div id=production{i+1}Button>
-                    <img src="./img//button/production_empty.svg" alt="" id="production{i+1}Image">
-                    <p id="production{i+1}Text">Test</p>
-                </div>
-                <progress id="production{i+1}Progress"></progress>
-            </div>
-
-            -->
-        </div>
+        <div class="productionList" id="productionList"></div>
         <br><br>
         <div class="craftingBondPreviewContainer">
             <div class="craftingBondPreview" id="craftingBondPreview">
-                <p class="craftingBondPreviewText" id="craftingBondPreviewText">[craftingBondPreviewText]</p>
-                <p class="craftingBondPreviewName" id="craftingBondPreviewName">[craftingBondPreviewName]</p>
+                <p class="craftingBondPreviewText" id="craftingBondPreviewText">&craftingBondPreviewText</p>
+                <p class="craftingBondPreviewName" id="craftingBondPreviewName">&craftingBondPreviewName</p>
             </div>
             <img src="./img/button/red_c_button.svg" alt="" class="craftingBondPreviewClearButton" id="craftingBondPreviewClearButton">
             <img src="./img/button/arrow_square_red.svg" alt="" class="craftingBondRegisterButton" id="craftingBondRegisterButton">
@@ -313,12 +287,17 @@
     <div class="inventoryPage page" id="inventoryPage">
         <h1 class="pageHeader">Inventory</h1>
         <div class="elementBuyPercentageContainer">
-            <p>Buy with <span id="elementBuyPercentagePreview">[%]</span>% of Energy<p>
-            <input type="range" name="" min="0" max="100" value="30" id="elementBuyPercentage">
+            <div class="elementBuyPercentagePreviewContainer">
+                <p>Buy with <span id="elementBuyPercentagePreview">[%]</span>% of Energy<p>
+            </div>
+            <div class="elementBuyPercentageSliderContainer">
+                <input type="range" name="" min="0" max="100" value="30" id="elementBuyPercentageSlider">
+            </div>
         </div>
         <br><br>
         <div class="elementInventory" id="elementInventory">
         </div>
     </div>
+</div>
 </body>
 </html> 

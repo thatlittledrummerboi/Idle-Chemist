@@ -8,7 +8,7 @@ var game = {
     activeCooldowns : {
     },
     version: "v0.3-BETA_PREVIEW-1",
-    currentPage: 1,
+    currentPage: 2,
     craftingBondPreview: {
         text: "",
     },
@@ -21,7 +21,7 @@ var player = {
     c: 299_792_458,
     baseEnergyMultiplier: 0.0000000000000000115,
     baseElementDivider: 32000000000000000,
-    energy: new Decimal(100),
+    energy: new Decimal(0),
     elements: data.baseElements,
     stats: {
         bondsCrafted: {},
@@ -34,7 +34,7 @@ var player = {
 }
 
 function calculateElementCost(elementKey) {
-    const atomicWeight = data.dat[elementKey]?.atomic_weight;
+    const atomicWeight = data.elements[elementKey]?.atomic_weight;
     if (!atomicWeight) {
         console.error(`Atomic weight for ${elementKey} not found.`);
         return null;
@@ -43,31 +43,34 @@ function calculateElementCost(elementKey) {
     return new Decimal(d);
 }
 
-function attemptElementPurchase(element) {
-    if (!player.elements[element].unlocked) {
-        for (let requirement in data.requirements[element]) {
-            if (requirement in player.elements) {
-                if (player.elements[requirement].count.lt((data.requirements[element][requirement]))) return (false);
-            }
-            else if (player[requirement].lt(data.requirements[element][requirement])) return (false);
+function attemptElementPurchase(elementKey) {
+    // Checks if element is unlocked
+    if (!player.elements[elementKey].unlocked) {
+        for (let requirement in data.requirements[elementKey]) {
+            // Checks if player has enough resources to unlock
+            if (requirement in player.elements) { if (player.elements[requirement].count.lt(data.requirements[elementKey][requirement])) return false; }
+            else if (requirement in player.stats.bondsCrafted) { if (player.stats.bondsCrafted[requirement].count.lt(data.requirements[elementKey][requirement])) return false; }
+            else if (player[requirement].lt(data.requirements[elementKey][requirement])) return false;
         } 
-        for (let requirement in data.requirements[element]) {
-            if (requirement in player.elements) player.elements[requirement].count = player.elements[requirement].count.minus(data.requirements[element][requirement]);
-            else player[requirement] = player[requirement].minus(data.requirements[element][requirement]);
+        // Subtract resources from player
+        for (let requirement in data.requirements[elementKey]) {
+            if (requirement in player.elements) player.elements[requirement].count = player.elements[requirement].count.minus(data.requirements[elementKey][requirement]);
+            else if (requirement in player.stats.bondsCrafted);
+            else player[requirement] = player[requirement].minus(data.requirements[elementKey][requirement]);
         }
-        player.elements[element].unlocked = true;
+        player.elements[elementKey].unlocked = true;
         return;
     }
-    player.elements[element].count = player.elements[element].count.plus(player.energy.mul(game.elementBuyPercentage).div(calculateElementCost(element)));
+    // Add elements bnased on player's money
+    player.elements[elementKey].count = player.elements[elementKey].count.plus(player.energy.mul(game.elementBuyPercentage).div(calculateElementCost(elementKey)));
     player.energy = player.energy.minus(player.energy.mul(game.elementBuyPercentage));
 }
 
 function checkAffordUnlock(elementKey) {
     for (let requirement in data.requirements[elementKey]) {
-        if (requirement in player.elements) {
-            if (player.elements[requirement].count.lt((data.requirements[elementKey][requirement]))) return (false);
-        }
-        else if (player[requirement].lt(data.requirements[elementKey][requirement])) return (false);
+        if (requirement in player.elements) { if (player.elements[requirement].count.lt(data.requirements[elementKey][requirement])) return (false); }
+        else if (requirement in player.stats.bondsCrafted) { if (player.stats.bondsCrafted[requirement].lt(data.requirements[elementKey][requirement])) return false; }
+        else if (player[requirement].lt(data.requirements[elementKey][requirement])) return false;
     } 
     return true;
 }
@@ -80,7 +83,7 @@ function produceEnergy(bond) {
     for (const [element, count] of Object.entries(bondData.elements)) if (!player.elements[element].unlocked || player.elements[element].count.lt(count)) return;
 
     let totalMass = 0;
-    for (const [element, count] of Object.entries(bondData.elements)) totalMass += data.dat[element].atomic_weight * count;
+    for (const [element, count] of Object.entries(bondData.elements)) totalMass += data.elements[element].atomic_weight * count;
 
     const energyYield = new Decimal(totalMass).times(player.c ** 2);
     const totalEnergy = energyYield.times(player.baseEnergyMultiplier);
@@ -92,7 +95,7 @@ function produceEnergy(bond) {
     for (const [element, count] of Object.entries(bondData.elements)) player.elements[element].count = player.elements[element].count.minus(count);
 
     player.energy = player.energy.plus(totalEnergy);
-    player.stats.bondsCrafted[bond] = (bond in player.stats.bondsCrafted) ? player.stats.bondsCrafted[bond] + 1 : 1;
+    player.stats.bondsCrafted[bond] += 1;
 }
 
 function getCooldownDuration(bond) {
@@ -103,7 +106,7 @@ function getCooldownDuration(bond) {
     for (const [element, count] of Object.entries(bondData.elements)) if (!player.elements[element].unlocked || player.elements[element].count.lt(count)) return;
 
     let totalMass = 0;
-    for (const [element, count] of Object.entries(bondData.elements)) totalMass += data.dat[element].atomic_weight * count;
+    for (const [element, count] of Object.entries(bondData.elements)) totalMass += data.elements[element].atomic_weight * count;
 
     const energyYield = new Decimal(totalMass).times(player.c ** 2);
     const totalEnergy = energyYield.times(player.baseEnergyMultiplier);
@@ -150,7 +153,7 @@ function updateValues() {
 
 
 function drawValues() {
-    document.getElementById('energyDisplayVarCorner').innerHTML = notationengine.biNotation(player.energy, 3) + " Energy";
+    document.getElementById('energyDisplayVarCorner').innerHTML = `${notationengine.biNotation(player.energy, 3)} Energy`;
 
     showPage(game.currentPage);
 
@@ -175,7 +178,7 @@ function drawValues() {
 
     if (game.currentPage == 2) {
 
-        game.elementBuyPercentage = (document.getElementById('elementBuyPercentage').value) / 100;
+        game.elementBuyPercentage = (document.getElementById('elementBuyPercentageSlider').value) / 100;
         document.getElementById('elementBuyPercentagePreview').innerHTML = (game.elementBuyPercentage * 100).toFixed(0);
 
         for (let elementKey in player.elements) {
@@ -185,13 +188,11 @@ function drawValues() {
                 document.getElementById(`elementInventoryItemImage${elementKey}`).style.filter = "grayscale(0%)";
                 document.getElementById(`elementPurchase${elementKey}`).style = "border-color: rgba(0, 255, 0, 1); background-color: rgba(0, 255, 50, 0.2)";
                 document.getElementById(`elementInventoryItemCount${elementKey}`).innerHTML = "Count: " + notationengine.biNotation(player.elements[elementKey].count, 2);
-                document.getElementById(`elementPurchase${elementKey}`).innerHTML = `buy ${notationengine.biNotation((player.energy.mul(game.elementBuyPercentage)).div(calculateElementCost(elementKey)), 2)} ${data.dat[elementKey].name}`;
+                document.getElementById(`elementPurchase${elementKey}`).innerHTML = `buy ${notationengine.biNotation((player.energy.mul(game.elementBuyPercentage)).div(calculateElementCost(elementKey)), 2)} ${data.elements[elementKey].name}`;
             } else {
-                let canAfford = checkAffordUnlock(elementKey);
-                
                 document.getElementById(`elementInventoryItemImage${elementKey}`).style.filter = "grayscale(100%)";
                 document.getElementById(`elementInventoryItemCount${elementKey}`).style.display = "none";
-                document.getElementById(`elementPurchase${elementKey}`).style = canAfford ? "border-color: rgba(0, 255, 0, 1); background-color: rgba(0, 255, 50, 0.2)" : "border-color: rgba(255, 0, 0, 1); background-color: rgba(255, 50, 50, 0.4)";
+                document.getElementById(`elementPurchase${elementKey}`).style = checkAffordUnlock(elementKey) ? "border-color: rgba(0, 255, 0, 1); background-color: rgba(0, 255, 50, 0.2)" : "border-color: rgba(255, 0, 0, 1); background-color: rgba(255, 50, 50, 0.4)";
                 document.getElementById(`elementPurchase${elementKey}`).innerHTML = "Unlock";
             }
         }
@@ -272,6 +273,7 @@ function load(payload) {
 }
 
 window.onload = () => {
+    // MENU BUTTONS
     document.getElementById('overviewPageButton').addEventListener("click", () => game.currentPage = 0);
     document.getElementById('craftingPageButton').addEventListener("click", () => game.currentPage = 1);
     document.getElementById('inventoryPageButton').addEventListener("click", () => game.currentPage = 2);
@@ -279,25 +281,12 @@ window.onload = () => {
     document.getElementById('loadButton').addEventListener("click", () => load(JSON.parse(prompt())));
 
 
-
+    // CRAFTING
     document.getElementById('craftingBondPreviewClearButton').addEventListener("click", () => {for (const elementKey in player.elements) game.craftingBondPreview[elementKey] = 0;})
     document.getElementById('craftingBondRegisterButton').addEventListener("click", () => craftingBondRegister())
     for (const elementKey in player.elements) {
         document.getElementById(`element${elementKey}`).addEventListener("click", () => {if (player.elements[elementKey].unlocked == true) game.craftingBondPreview[elementKey] = (elementKey in game.craftingBondPreview) ? game.craftingBondPreview[elementKey] + 1 : 1 });
     }
-
-    let x = "";
-    for (let elementKey in player.elements) x = x + `
-        <div class="elementInventoryItem" id="elementInventoryItem${elementKey}">
-            <img src="./img/PeriodicTableElements/${elementKey}.svg" id="elementInventoryItemImage${elementKey}">
-            <p id="elementInventoryItemCount${elementKey}">Count: [0]</p>
-            <button id=elementPurchase${elementKey}>[buy]</button>
-            <br><br>
-        </div>
-    `;
-    document.getElementById('elementInventory').innerHTML = x;
-
-    for (let elementKey in player.elements) document.getElementById(`elementPurchase${elementKey}`).addEventListener("click", () => attemptElementPurchase(elementKey));
 
     let y = "";
     for (let i = 0; i<player.production.length; i++) y = y + `
@@ -312,6 +301,23 @@ window.onload = () => {
     document.getElementById('productionList').innerHTML = y;
 
     for (let i = 0; i<player.production.length; i++) document.getElementById(`production${i+1}Button`).addEventListener("click", () => productionItemClickEvent(i));
+
+    // INVENTORY
+    let x = "";
+    for (let elementKey in player.elements) x = x + `
+        <div class="elementInventoryItem" id="elementInventoryItem${elementKey}">
+            <img src="./img/PeriodicTableElements/${elementKey}.svg" id="elementInventoryItemImage${elementKey}">
+            <p id="elementInventoryItemCount${elementKey}">Count: [0]</p>
+            <button id=elementPurchase${elementKey}>[buy]</button>
+            <br><br>
+        </div>
+    `;
+    document.getElementById('elementInventory').innerHTML = x;
+
+    for (let elementKey in player.elements) document.getElementById(`elementPurchase${elementKey}`).addEventListener("click", () => attemptElementPurchase(elementKey));
+
+    // SETUP VARIABLES
+    for (let item in data.bonds) player.stats.bondsCrafted[item] = new Decimal(0);
 
     setInterval(frame, 1000/player.settings.framerate);
 };

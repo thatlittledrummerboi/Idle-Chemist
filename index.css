@@ -12,7 +12,7 @@ body {
 .sidenav {
     width: 15%;
     max-width: 150px;
-    min-width: 80px;
+    min-width: 100px;
     position: fixed;
     left: 0;
     top: 30px;
@@ -64,11 +64,13 @@ body {
 }
 
 .topBar div p {
+    z-index: 1;
     margin: auto;
     padding: 0;
 }
 
 .page {
+    z-index: 2;
     margin: 0 20% 0 20%;
 }
 
@@ -207,8 +209,19 @@ body {
     display: flex;
 }
 
-.elementBuyPercentageContainer input {
-    width: 350px;
+.elementBuyPercentagePreviewContainer {
+    min-width: 180px;
+    padding-right: 5px;
+}
+
+.elementBuyPercentageSliderContainer {
+    width: 100%;
+    margin: auto 0 auto auto;
+}
+
+#elementBuyPercentageSlider {
+    width: 100%;
+    margin: 0;
 }
 
 /* ##### */
