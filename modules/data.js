@@ -1,10 +1,6 @@
 import Decimal from "./break_infinity.js";
 
 const bonds = {
-    "sample": {
-        name: "",
-        elements: {}
-    },
     "H2O": {
         name: "Water",
         elements: {
@@ -44,9 +40,6 @@ const bonds = {
             "He": 2,
         }
     },
-    "": {
-
-    }
 }
 
 const elements = {
