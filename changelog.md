@@ -4,6 +4,8 @@
 * Added more element unlocking requirements (to be balanced)
 * Worked on Save/Load system
   * Added Local save system (browser local storage)
+  * Added Import Save System
+* Added Settings Menu
 * Added Loading screen
 
 ### Version 0.2.1-BETA
