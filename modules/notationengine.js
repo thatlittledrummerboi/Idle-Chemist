@@ -12,7 +12,7 @@ function timeNotation(ms) {
     ms -= t.s*1_000
 
     let zms = ms==0?"000":ms<10?"00"+ms:ms<100?"0"+ms:ms;  // if ms==0 return 000; if ms<10 return 00x; if ms<100 return 0xx; otherwise return xxx
-    for (let item in t) result = `${result}${result==""?"":":"}${t[item] == 0 ? "00" : t[item] < 10 ? "0" + t[item] : t[item]}`
+    for (let item in t) result = `${result}${result==""?"":":"}${t[item]==0?"00":t[item]<10?"0"+t[item]:t[item]}`
     return(result + "." + zms);
 }
 
