@@ -1,27 +1,27 @@
 import Decimal from "./modules/break_infinity.js";
+import { compatibilityCheck, fatalErrorDiagnosticTable } from "./modules/compatibilityCheck.js";
 import * as data from "./modules/data.js";
 import * as notationengine from "./modules/notationengine.js";
 
-const ts = new Date()
-
+// Setup for Object "game"
 var game = {
     activeCooldowns : {
     },
-    version: "v0.3-BETA_PREVIEW-1",
-    currentPage: 2,
-    craftingBondPreview: {
-        text: "",
-    },
+    version: "v0.3-BETA",
+    currentPage: 3,
+    craftingBondPreview: {text: ""},
     selectedProductionItem: null,
     currentTimestamp: 0,
     elementBuyPercentage: 20,
+    checkedForSave: false,
 }
 
+// Setup for Object "player"
 var player = {
     c: 299_792_458,
     baseEnergyMultiplier: 0.0000000000000000115,
     baseElementDivider: 32000000000000000,
-    energy: new Decimal(0),
+    energy: new Decimal(100000),
     elements: data.baseElements,
     stats: {
         bondsCrafted: {},
@@ -31,8 +31,11 @@ var player = {
         framerate: 24,
     },
     ignoreTimestampFromSave: false,
+    timestampSinceLastTick: 0,
+    version: "",
 }
 
+// Function to calculate cost of an element
 function calculateElementCost(elementKey) {
     const atomicWeight = data.elements[elementKey]?.atomic_weight;
     if (!atomicWeight) {
@@ -43,6 +46,7 @@ function calculateElementCost(elementKey) {
     return new Decimal(d);
 }
 
+// Function to attempt to buy an element
 function attemptElementPurchase(elementKey) {
     // Checks if element is unlocked
     if (!player.elements[elementKey].unlocked) {
@@ -66,6 +70,7 @@ function attemptElementPurchase(elementKey) {
     player.energy = player.energy.minus(player.energy.mul(game.elementBuyPercentage));
 }
 
+// function to chefck if player can afford to unlock an element
 function checkAffordUnlock(elementKey) {
     for (let requirement in data.requirements[elementKey]) {
         if (requirement in player.elements) { if (player.elements[requirement].count.lt(data.requirements[elementKey][requirement])) return (false); }
@@ -95,7 +100,7 @@ function produceEnergy(bond) {
     for (const [element, count] of Object.entries(bondData.elements)) player.elements[element].count = player.elements[element].count.minus(count);
 
     player.energy = player.energy.plus(totalEnergy);
-    player.stats.bondsCrafted[bond] += 1;
+    player.stats.bondsCrafted[bond] = player.stats.bondsCrafted[bond].plus(1);
 }
 
 function getCooldownDuration(bond) {
@@ -117,16 +122,21 @@ function getCooldownDuration(bond) {
 }
 
 function updateValues() {
-    game.currentTimestamp = ts.getTime();
+    if (!game.checkedForSave) {
+        let x = window.localStorage.getItem("slot_1");
+        if (x != undefined) load(JSON.parse(x));
+        game.checkedForSave = true;
+    }
+
+    game.currentTimestamp = Date.now();
+    player.timestampSinceLastTick = game.currentTimestamp;
     const intervalTime = 1000/player.settings.framerate;
 
     for (let i = 0; i<player.production.length; i++) {
         if (!(player.production[i] == "")) {
             if( game.activeCooldowns[player.production[i]] > 0) {
                 game.activeCooldowns[player.production[i]] -= intervalTime;
-            } else {
-                produceEnergy(player.production[i]);
-            }
+            } else produceEnergy(player.production[i]);
         }
     }
 
@@ -197,6 +207,10 @@ function drawValues() {
             }
         }
     }
+
+    if (game.currentPage == 3) {
+        document.getElement
+    }
 }
 
 
@@ -204,16 +218,12 @@ function productionItemClickEvent(id) {
     if (game.selectedProductionItem != id) {
         game.selectedProductionItem = id;
     
-        for (let i = 0; i<player.production.length; i++) {
-            document.getElementById(`production${i+1}Image`).style.filter = game.selectedProductionItem == i ? "grayscale(50%)" : "grayscale(0%)";
-        }
+        for (let i = 0; i<player.production.length; i++) document.getElementById(`production${i+1}Image`).style.filter = game.selectedProductionItem == i ? "grayscale(50%)" : "grayscale(0%)";
         return;
     }
 
     game.selectedProductionItem = null;
-    for (let i = 0; i<player.production.length; i++) {
-        document.getElementById(`production${i+1}Image`).style.filter = "grayscale(0%)";
-    }
+    for (let i = 0; i<player.production.length; i++) document.getElementById(`production${i+1}Image`).style.filter = "grayscale(0%)";
 }
 
 function craftingBondRegister() {
@@ -222,9 +232,7 @@ function craftingBondRegister() {
 
     player.production[game.selectedProductionItem] = game.craftingBondPreview.text;
     game.selectedProductionItem = null;
-    for (let i = 0; i<player.production.length; i++) {
-        document.getElementById(`production${i+1}Image`).style.filter = "grayscale(0%)";
-    }
+    for (let i = 0; i<player.production.length; i++) document.getElementById(`production${i+1}Image`).style.filter = "grayscale(0%)";
     for (const elementKey in player.elements) game.craftingBondPreview[elementKey] = 0;
 }
 
@@ -234,19 +242,20 @@ function frame() {
 }
 
 function showPage(num) {
-    let pages = ["homePage", "craftingPage", "inventoryPage"];
+    let pages = ["homePage", "craftingPage", "inventoryPage", "settingsPage"];
     for(let i = 0; i<pages.length; i++) document.getElementById(pages[i]).style = "display: none;";
     document.getElementById(pages[num]).style = "display: block";
 }
 
-function save(destination) {
+function save(destination, ss) {
+    player.version = game.version;
     const payload = JSON.stringify(player);
 
     if (destination == 0) {
-        //cookie
+        window.localStorage.setItem("slot_"+ss, payload);
     } else if (destination == 1) {
         const a = document.createElement('a');
-        a.download = "save_" + ts.getTime() + ".json";
+        a.download = "save_" + game.currentTimestamp + ".json";
         a.href = `data:application/payload,${window.encodeURIComponent(payload)}`;
         a.click();
         a.remove();
@@ -263,30 +272,42 @@ function load(payload) {
         player.elements[elementKey].unlocked = payload.elements[elementKey].unlocked ?? data.baseElements[elementKey].unlocked;
     }
 
-    player.stats.bondsCrafted = payload.stats.bondsCrafted ?? {};
+    for (let item in player.stats.bondsCrafted) player.stats.bondsCrafted[item] = new Decimal(payload.stats.bondsCrafted[item]) ?? new Decimal(0);
+
 
     player.production = payload.production ?? ["", "", null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null,];
 
-    for (let setting in player.settings) {
-        player.settings[setting] = payload.settings[setting];
-    }
+    for (let setting in player.settings) player.settings[setting] = payload.settings[setting];
+
+    player.timestampSinceLastTick = payload.timestampSinceLastTick;
 }
 
+function reset() {player = data.basePlayer;}
+
+const wait = (delay = 0) => new Promise(resolve => setTimeout(resolve, delay));
+
 window.onload = () => {
+    if (compatibilityCheck() != "pass") {
+        const cchk = compatibilityCheck();
+        document.getElementById('game').style.display = "none";
+        document.getElementById('loading').style.display = "none";
+        document.getElementById('errors_fatal').style.display = "block";
+
+        document.getElementById('errorMessage').innerHTML = `Error code ${cchk}: ${fatalErrorDiagnosticTable[cchk]}`;
+        return;
+    }
+
     // MENU BUTTONS
     document.getElementById('overviewPageButton').addEventListener("click", () => game.currentPage = 0);
     document.getElementById('craftingPageButton').addEventListener("click", () => game.currentPage = 1);
     document.getElementById('inventoryPageButton').addEventListener("click", () => game.currentPage = 2);
-    document.getElementById('saveButton').addEventListener("click", () => save(1));
-    document.getElementById('loadButton').addEventListener("click", () => load(JSON.parse(prompt())));
+    document.getElementById('settingsPageButton').addEventListener("click", () => game.currentPage = 3);
 
 
     // CRAFTING
     document.getElementById('craftingBondPreviewClearButton').addEventListener("click", () => {for (const elementKey in player.elements) game.craftingBondPreview[elementKey] = 0;})
     document.getElementById('craftingBondRegisterButton').addEventListener("click", () => craftingBondRegister())
-    for (const elementKey in player.elements) {
-        document.getElementById(`element${elementKey}`).addEventListener("click", () => {if (player.elements[elementKey].unlocked == true) game.craftingBondPreview[elementKey] = (elementKey in game.craftingBondPreview) ? game.craftingBondPreview[elementKey] + 1 : 1 });
-    }
+    for (const elementKey in player.elements) document.getElementById(`element${elementKey}`).addEventListener("click", () => {if (player.elements[elementKey].unlocked == true) game.craftingBondPreview[elementKey] = (elementKey in game.craftingBondPreview) ? game.craftingBondPreview[elementKey] + 1 : 1 });
 
     let y = "";
     for (let i = 0; i<player.production.length; i++) y = y + `
@@ -316,8 +337,35 @@ window.onload = () => {
 
     for (let elementKey in player.elements) document.getElementById(`elementPurchase${elementKey}`).addEventListener("click", () => attemptElementPurchase(elementKey));
 
+    // SETTINGS
+    document.getElementById('exportToFile').addEventListener("click", () => save(1));
+    document.getElementById('importSaveFromTextButton').addEventListener("click", () => {load(JSON.parse(document.getElementById('importSaveFromTextInput').value)); document.getElementById('importSaveFromTextInput').value = ""});
+
+
     // SETUP VARIABLES
     for (let item in data.bonds) player.stats.bondsCrafted[item] = new Decimal(0);
 
-    setInterval(frame, 1000/player.settings.framerate);
+
+    // OTHER
+    window.addEventListener("beforeunload", () => save(0, 1))
+
+    showPage(0);
+    showPage(1);
+    showPage(2);
+    showPage(3);
+
+    showPage(game.currentPage)
+
+    wait(1000).then(() => {
+        document.getElementById('game').style = "display:block";
+        document.getElementById('loading').style = "display:none"
+        const gameLoop = setInterval(frame, 1000/player.settings.framerate);
+        
+        const autoSave30s = setInterval(save, 30_000, 0, "2");
+        const autoSave5Min = setInterval(save, 300_000, 0 , "3");
+        const autoSave30Min = setInterval(save, 1_800_000, 0, "4");
+        const autoSave1Hr = setInterval(save, 3_600_000, 0, "5");
+    })
+
+    
 };

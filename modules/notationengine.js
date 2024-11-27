@@ -16,8 +16,6 @@ function timeNotation(ms) {
     return(result + "." + zms);
 }
 
-console.log(timeNotation(84_426_000))
-
 function biNotation(vala, decpointa, notationa) {
     let notation = notationa ?? 0;
     let val = new Decimal(vala);
@@ -52,9 +50,9 @@ function StandardNotation(valstring, exp) {
     let q = exp < 18 ? 0 : 1;
 
     switch(exp % 3) {
-        case 0: return(`${valstring[0]}.${valstring.substring(1+q, 3+q) + suffixes[Math.floor(exp/3)]}`);
-        case 1: return(`${valstring[0] + valstring[1+q]}.${valstring.substring(2+q, 4+q) + suffixes[Math.floor(exp/3)]}`);
-        case 2: return(`${valstring[0] + valstring.substring(1+q, 2+q)}.${valstring.substring(3+q, 5+q) + suffixes[Math.floor(exp/3)]}`);
+        case 0: return(valstring[0] + "." + valstring[1+q] + valstring[2+q] + valstring[3+q] + suffixes[Math.floor(exp/3)]);
+        case 1: return(valstring[0] + valstring[1+q] + "." + valstring[2+q] + valstring[3+q] + valstring[4+q] + suffixes[Math.floor(exp/3)]);
+        case 2: return(valstring[0] + valstring[1+q] + valstring[2+q] + "." + valstring[3+q] + valstring[4+q] + valstring[5+q] + suffixes[Math.floor(exp/3)]);
     }
 }
 
