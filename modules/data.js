@@ -1,10 +1,6 @@
 import Decimal from "./break_infinity.js";
 
 const bonds = {
-    "sample": {
-        name: "",
-        elements: {}
-    },
     "H2O": {
         name: "Water",
         elements: {
@@ -44,9 +40,6 @@ const bonds = {
             "He": 2,
         }
     },
-    "": {
-
-    }
 }
 
 const elements = {
@@ -371,8 +364,9 @@ const requirements = {
     "Ir": { "energy": new Decimal(1e7) },
     "Pt": { "energy": new Decimal(1e7) },
     "Au": { "energy": new Decimal(1e7) },
+    "Hg": { "energy": new Decimal(1e7) },
     "Tl": { "energy": new Decimal(1e7) },
-    "pb": { "energy": new Decimal(1e7) },
+    "Pb": { "energy": new Decimal(1e7) },
     "Bi": { "energy": new Decimal(1e7) },
     "Po": { "energy": new Decimal(1e7) },
     "At": { "energy": new Decimal(1e7) },
@@ -411,4 +405,22 @@ const requirements = {
     "Og": { "energy": new Decimal(1e7) },
 }
 
-export { bonds, elements, baseElements, requirements}
+let basePlayer = {
+
+    c: 299_792_458,
+    baseEnergyMultiplier: 0.0000000000000000115,
+    baseElementDivider: 32000000000000000,
+    energy: new Decimal(100000),
+    elements: baseElements,
+    stats: {
+        bondsCrafted: {},
+    },
+    production: ["", "", "", "", "", null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null,],
+    settings: {
+        framerate: 24,
+    },
+    ignoreTimestampFromSave: false,
+    timestampSinceLastTick: 0,
+}
+
+export { bonds, elements, baseElements, requirements, basePlayer}
