@@ -1,19 +1,13 @@
 function timeNotation(ms) {
-    let result = "";
-    let t = {d:null,h:null,m:null,s:null}
+    let x = ms.toString()
+    const dateObj = new Date(ms);
+    const hours = dateObj.getUTCHours();
+    const minutes = dateObj.getUTCMinutes();
+    const seconds = dateObj.getSeconds();
+    const milliseconds = x.slice(-3);
+    const timeString = hours.toString().padStart(2, '0') + ':' +  minutes.toString().padStart(2, '0') + ':' + seconds.toString().padStart(2, '0') + "." + milliseconds;
 
-    t.d = Math.floor(ms / 86_400_000);
-    ms -= t.d*86_400_000
-    t.h = Math.floor(ms / 3_600_000);
-    ms -= t.h*3_600_000;
-    t.m = Math.floor(ms / 60_000);
-    ms -= t.m*60_000;
-    t.s = Math.floor(ms / 1_000);
-    ms -= t.s*1_000
-
-    let zms = ms==0?"000":ms<10?"00"+ms:ms<100?"0"+ms:ms;  // if ms==0 return 000; if ms<10 return 00x; if ms<100 return 0xx; otherwise return xxx
-    for (let item in t) result = `${result}${result==""?"":":"}${t[item]==0?"00":t[item]<10?"0"+t[item]:t[item]}`
-    return(result + "." + zms);
+    return timeString;
 }
 
 function biNotation(vala, decpointa, notationa) {
@@ -25,8 +19,7 @@ function biNotation(vala, decpointa, notationa) {
 
 
     if (val.lt(1000)) {
-        if (val.equals(0)) return("0");
-        return(valstring);
+        return(val.equals(0) ? "0" : valstring);
     }
 
     if (notation == 0) {
@@ -58,4 +51,4 @@ function StandardNotation(valstring, exp) {
 
 function SciNotation(valstring, exp) { return(valstring[0] + "." + valstring.substring(2, 4) + "e" + biNotation(exp, 0)); }
 
-export { biNotation, floorLog10, timeNotation}; 
+export { biNotation, timeNotation}; 

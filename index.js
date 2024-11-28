@@ -5,10 +5,8 @@ import * as notationengine from "./modules/notationengine.js";
 
 // Setup for Object "game"
 var game = {
-    activeCooldowns : {
-    },
-    version: "v0.3-BETA",
-    currentPage: 3,
+    version: "v0.3-BETA-preview-2",
+    currentPage: 0,
     craftingBondPreview: {text: ""},
     selectedProductionItem: null,
     currentTimestamp: 0,
@@ -17,24 +15,26 @@ var game = {
 }
 
 // Setup for Object "player"
-var player = {
-    c: 299_792_458,
-    baseEnergyMultiplier: 0.0000000000000000115,
-    baseElementDivider: 32000000000000000,
-    energy: new Decimal(100000),
-    elements: data.baseElements,
-    stats: {
+function Player() {
+    this.c = 299_792_458;
+    this.baseEnergyMultiplier = 0.0000000000000000115;
+    this.baseElementDivider = 32000000000000000;
+    this.energy = new Decimal(1000000000000);
+    this.elements = data.baseElements;
+    this.stats = {
         bondsCrafted: {},
-    },
-    production: ["", "", "", "", "", null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null,],
-    settings: {
+    };
+    this.production = [{bond: '', cooldown: 0}, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null,];
+    this.settings = {
         framerate: 24,
-    },
-    ignoreTimestampFromSave: false,
-    timestampSinceLastTick: 0,
-    version: "",
-    lastAutosaves: {'30sec': 0, '5min': 0, '20min': 0, '1hr': 0}, // 30 sec, 5 min, 20 min, 1 hr
+    };
+    this.ignoreTimestampFromSave = false;
+    this.timestampSinceLastTick = 0;
+    this.version = "";
+    this.lastAutosaves = {'30sec': 0, '5min': 0, '20min': 0, '1hr': 0}; // 30 sec, 5 min, 20 min, 1 hr
 }
+
+var player = new Player();
 
 // Function to calculate cost of an element
 function calculateElementCost(elementKey) {
@@ -81,25 +81,37 @@ function checkAffordUnlock(elementKey) {
     return true;
 }
 
-function produceEnergy(bond) {
+function produceEnergy(slotIndex) {
+    const productionSlot = player.production[slotIndex];
+    const bond = productionSlot.bond;
+
+    if (!bond) return; // Skip empty slots
+
     const bondData = data.bonds[bond];
+    if (!bondData) return; // Invalid bond
 
-    if (!bondData) return;
+    // Check if the player has enough elements for the bond
+    for (const [element, count] of Object.entries(bondData.elements)) {
+        if (!player.elements[element].unlocked || player.elements[element].count.lt(count)) return;
+    }
 
-    for (const [element, count] of Object.entries(bondData.elements)) if (!player.elements[element].unlocked || player.elements[element].count.lt(count)) return;
-
+    // Calculate total mass and energy yield
     let totalMass = 0;
-    for (const [element, count] of Object.entries(bondData.elements)) totalMass += data.elements[element].atomic_weight * count;
-
+    for (const [element, count] of Object.entries(bondData.elements)) {
+        totalMass += data.elements[element].atomic_weight * count;
+    }
     const energyYield = new Decimal(totalMass).times(player.c ** 2);
     const totalEnergy = energyYield.times(player.baseEnergyMultiplier);
 
-    if(!(bond in game.activeCooldowns)) game.activeCooldowns[bond] = 0;
-    const cooldownDuration = totalEnergy.toNumber() * 500;
-    game.activeCooldowns[bond] = cooldownDuration;
+    // Assign cooldown duration based on energy yield
+    productionSlot.cooldown = totalEnergy.toNumber() * 500;
 
-    for (const [element, count] of Object.entries(bondData.elements)) player.elements[element].count = player.elements[element].count.minus(count);
+    // Deduct elements used for the bond
+    for (const [element, count] of Object.entries(bondData.elements)) {
+        player.elements[element].count = player.elements[element].count.minus(count);
+    }
 
+    // Add energy to the player's total
     player.energy = player.energy.plus(totalEnergy);
     player.stats.bondsCrafted[bond] = player.stats.bondsCrafted[bond].plus(1);
 }
@@ -117,7 +129,6 @@ function getCooldownDuration(bond) {
     const energyYield = new Decimal(totalMass).times(player.c ** 2);
     const totalEnergy = energyYield.times(player.baseEnergyMultiplier);
 
-    if(!(bond in game.activeCooldowns)) game.activeCooldowns[bond] = 0;
     const cooldownDuration = totalEnergy.toNumber() * 500;
     return(cooldownDuration);
 }
@@ -141,11 +152,16 @@ function updateValues() {
     player.timestampSinceLastTick = game.currentTimestamp;
     const intervalTime = 1000/player.settings.framerate;
 
-    for (let i = 0; i<player.production.length; i++) {
-        if (!(player.production[i] == "")) {
-            if( game.activeCooldowns[player.production[i]] > 0) {
-                game.activeCooldowns[player.production[i]] -= intervalTime;
-            } else produceEnergy(player.production[i]);
+    // Process production slots
+    for (let i = 0; i < player.production.length; i++) {
+        const productionSlot = player.production[i];
+        if (productionSlot == null) continue;
+        if (productionSlot.bond) {
+            if (productionSlot.cooldown > 0) {
+                productionSlot.cooldown -= intervalTime;
+            } else {
+                produceEnergy(i);
+            }
         }
     }
 
@@ -175,25 +191,41 @@ function drawValues() {
     document.getElementById('energyDisplayVarCorner').innerHTML = `${notationengine.biNotation(player.energy, 3)} Energy`;
 
     showPage(game.currentPage);
+    // Production Page (game.currentPage === 0)
+    if (game.currentPage === 0) {
+        for (let i = 0; i < player.production.length; i++) {
+            const productionSlot = player.production[i];
+        
+            document.getElementById(`productionItemPreview${i + 1}Text`).innerHTML = player.production[i] == null
+                ? ""
+                : player.production[i].bond == "" ? `${i+1}. Empty` : `${i + 1}. ${player.production[i].bond}: ${notationengine.timeNotation(Math.round(productionSlot.cooldown))}`;
+        }
+
+        for (const elementKey in player.elements) {
+            document.getElementById(`inventoryItemPreview${elementKey}`).innerHTML = player.elements[elementKey].unlocked == true ? `${data.elements[elementKey].name}: ${notationengine.biNotation(player.elements[elementKey].count)}` : ``;
+        }
+    }
 
     if (game.currentPage == 1) {
         for (const elementKey in player.elements) document.getElementById(`element${elementKey}`).style.filter = player.elements[elementKey].unlocked ? "grayscale(0%)" : "grayscale(100%)";
 
         for (let i = 0; i<player.production.length; i++) {
             if (player.production[i] == null) document.getElementById(`production${i+1}`).style.display = "none";
-            else if (player.production[i] == "") {
+            else if (player.production[i].bond == "") {
                 document.getElementById(`production${i+1}Image`).src = "./img/button/production_empty.svg";
                 document.getElementById(`production${i+1}Progress`).removeAttribute('value');
                 document.getElementById(`production${i+1}Text`).innerHTML = "";
             }
             else {
+                let cooldownProgress = player.production[i].cooldown / getCooldownDuration(player.production[i].bond);
                 document.getElementById(`production${i+1}Image`).src = "./img/button/production_filled.svg";
-                document.getElementById(`production${i+1}Progress`).value = isFinite(game.activeCooldowns[player.production[i]] / getCooldownDuration(player.production[i])) ? game.activeCooldowns[player.production[i]] / getCooldownDuration(player.production[i]) : null;
-                document.getElementById(`production${i+1}Text`).innerHTML = player.production[i];
+                document.getElementById(`production${i+1}Progress`).value = isFinite(cooldownProgress) ? cooldownProgress : "";
+                document.getElementById(`production${i+1}Text`).innerHTML = player.production[i].bond;
             }
 
         }   
     }
+
 
     if (game.currentPage == 2) {
 
@@ -222,29 +254,35 @@ function drawValues() {
     }
 }
 
-
 function productionItemClickEvent(id) {
-    if (game.selectedProductionItem != id) {
+    if (game.selectedProductionItem !== id) {
         game.selectedProductionItem = id;
-    
-        for (let i = 0; i<player.production.length; i++) document.getElementById(`production${i+1}Image`).style.filter = game.selectedProductionItem == i ? "grayscale(50%)" : "grayscale(0%)";
+
+        for (let i = 0; i < player.production.length; i++) {
+            document.getElementById(`production${i + 1}Image`).style.filter = game.selectedProductionItem === i ? "grayscale(50%)" : "grayscale(0%)";
+        }
         return;
     }
 
     game.selectedProductionItem = null;
-    for (let i = 0; i<player.production.length; i++) document.getElementById(`production${i+1}Image`).style.filter = "grayscale(0%)";
+    for (let i = 0; i < player.production.length; i++) {
+        document.getElementById(`production${i + 1}Image`).style.filter = "grayscale(0%)";
+    }
 }
 
 function craftingBondRegister() {
     if (game.selectedProductionItem == null) return;
-    if (!(game.craftingBondPreview.text in data.bonds)) return
+    if (!(game.craftingBondPreview.text in data.bonds)) return;
 
-    player.production[game.selectedProductionItem] = game.craftingBondPreview.text;
+    player.production[game.selectedProductionItem] = { bond: game.craftingBondPreview.text, cooldown: 0 };
     game.selectedProductionItem = null;
-    for (let i = 0; i<player.production.length; i++) document.getElementById(`production${i+1}Image`).style.filter = "grayscale(0%)";
-    for (const elementKey in player.elements) game.craftingBondPreview[elementKey] = 0;
+    for (let i = 0; i < player.production.length; i++) {
+        document.getElementById(`production${i + 1}Image`).style.filter = "grayscale(0%)";
+    }
+    for (const elementKey in player.elements) {
+        game.craftingBondPreview[elementKey] = 0;
+    }
 }
-
 function frame() {
     updateValues();
     drawValues();
@@ -284,7 +322,7 @@ function load(payload) {
     for (let item in player.stats.bondsCrafted) player.stats.bondsCrafted[item] = new Decimal(payload.stats.bondsCrafted[item]) ?? new Decimal(0);
 
 
-    player.production = payload.production ?? ["", "", null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null,];
+    player.production = payload.production ?? [{bond: '', cooldown: 0}, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null,];
 
     for (let setting in player.settings) player.settings[setting] = payload.settings[setting];
 
@@ -293,7 +331,7 @@ function load(payload) {
     for (let delay in player.lastAutosaves) player.lastAutosaves[delay] = payload.lastAutosaves[delay];
 }
 
-function reset() {player = data.basePlayer;}
+function reset() {player = undefined; player = new Player; for (let item in data.bonds) player.stats.bondsCrafted[item] = new Decimal(0);}
 
 const wait = (delay = 0) => new Promise(resolve => setTimeout(resolve, delay));
 
@@ -314,7 +352,16 @@ window.onload = () => {
     document.getElementById('craftingPageButton').addEventListener("click", () => game.currentPage = 1);
     document.getElementById('inventoryPageButton').addEventListener("click", () => game.currentPage = 2);
     document.getElementById('settingsPageButton').addEventListener("click", () => game.currentPage = 3);
+    document.getElementById('reset').addEventListener("click", () => reset())
 
+    // OVERVIEW
+    let z = "";
+    for (let i = 0; i<player.production.length; i++) z = z + `<p id="productionItemPreview${i+1}Text">null</p>`;
+    document.getElementById('productionItemPreviews').innerHTML = z;
+
+    let w = "";
+    for (const elementKey in player.elements) w = w + `<p id="inventoryItemPreview${elementKey}">null</p>`
+    document.getElementById('inventoryItemPreviews').innerHTML = w;
 
     // CRAFTING
     document.getElementById('craftingBondPreviewClearButton').addEventListener("click", () => {for (const elementKey in player.elements) game.craftingBondPreview[elementKey] = 0;})
@@ -359,7 +406,7 @@ window.onload = () => {
 
 
     // OTHER
-    window.addEventListener("beforeunload", () => save(0, "default"))
+    //window.addEventListener("beforeunload", () => save(0, "default"))
 
     showPage(0);
     showPage(1);
@@ -370,7 +417,10 @@ window.onload = () => {
 
     wait(1000).then(() => {
         document.getElementById('game').style = "display:block";
-        document.getElementById('loading').style = "display:none"
+        document.getElementById('loading').style = "display:none";
+        player.production[0] = {bond: '', cooldown: 0}
+
         const gameLoop = setInterval(frame, 1000/player.settings.framerate);
+
     })
 };
