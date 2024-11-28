@@ -33,6 +33,7 @@ var player = {
     ignoreTimestampFromSave: false,
     timestampSinceLastTick: 0,
     version: "",
+    lastAutosaves: {'30sec': 0, '5min': 0, '20min': 0, '1hr': 0}, // 30 sec, 5 min, 20 min, 1 hr
 }
 
 // Function to calculate cost of an element
@@ -122,8 +123,16 @@ function getCooldownDuration(bond) {
 }
 
 function updateValues() {
+    const times = {'30sec': 30_000, '5min': 300_000, '20min': 1_200_000, '1hr': 3_600_000};
+    for (let delay in player.lastAutosaves) {
+        if (Date.now() - player.lastAutosaves[delay] >= times[delay]) {
+            player.lastAutosaves[delay] = Date.now();
+            save(0, delay)
+        }
+    }
+
     if (!game.checkedForSave) {
-        let x = window.localStorage.getItem("slot_1");
+        let x = window.localStorage.getItem("default");
         if (x != undefined) load(JSON.parse(x));
         game.checkedForSave = true;
     }
@@ -252,7 +261,7 @@ function save(destination, ss) {
     const payload = JSON.stringify(player);
 
     if (destination == 0) {
-        window.localStorage.setItem("slot_"+ss, payload);
+        window.localStorage.setItem(ss, payload);
     } else if (destination == 1) {
         const a = document.createElement('a');
         a.download = "save_" + game.currentTimestamp + ".json";
@@ -280,6 +289,8 @@ function load(payload) {
     for (let setting in player.settings) player.settings[setting] = payload.settings[setting];
 
     player.timestampSinceLastTick = payload.timestampSinceLastTick;
+    
+    for (let delay in player.lastAutosaves) player.lastAutosaves[delay] = payload.lastAutosaves[delay];
 }
 
 function reset() {player = data.basePlayer;}
@@ -289,6 +300,7 @@ const wait = (delay = 0) => new Promise(resolve => setTimeout(resolve, delay));
 window.onload = () => {
     if (compatibilityCheck() != "pass") {
         const cchk = compatibilityCheck();
+        document.body.style = "background-color: #101010;";
         document.getElementById('game').style.display = "none";
         document.getElementById('loading').style.display = "none";
         document.getElementById('errors_fatal').style.display = "block";
@@ -347,7 +359,7 @@ window.onload = () => {
 
 
     // OTHER
-    window.addEventListener("beforeunload", () => save(0, 1))
+    window.addEventListener("beforeunload", () => save(0, "default"))
 
     showPage(0);
     showPage(1);
@@ -360,12 +372,5 @@ window.onload = () => {
         document.getElementById('game').style = "display:block";
         document.getElementById('loading').style = "display:none"
         const gameLoop = setInterval(frame, 1000/player.settings.framerate);
-        
-        const autoSave30s = setInterval(save, 30_000, 0, "2");
-        const autoSave5Min = setInterval(save, 300_000, 0 , "3");
-        const autoSave30Min = setInterval(save, 1_800_000, 0, "4");
-        const autoSave1Hr = setInterval(save, 3_600_000, 0, "5");
     })
-
-    
 };
