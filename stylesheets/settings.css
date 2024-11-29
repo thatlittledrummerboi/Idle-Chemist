@@ -1,0 +1,32 @@
+
+.settingsBody {
+    display: flex;
+    justify-content: center;
+    text-align: center;
+}
+
+.settingsItem {
+    transition: 200ms;
+    height: 80px;
+    width: 100%;
+    border-radius: var(--default-border-radius);
+    border: 1px solid var(--green-accent);
+    margin-bottom: 10px;
+}
+
+.settingsItem:hover {
+    background-color: var(--green-accent);
+    transition: 200ms;
+}
+
+
+/* individual settings items */
+
+#importSaveFromText input {
+    width: 65%;
+}
+
+#importSaveFromText button {
+    width: 20%;
+    padding: 0 2px 0 0;
+}

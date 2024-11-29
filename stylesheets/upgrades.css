@@ -1,0 +1,18 @@
+#unlockProductionSlotButton {
+    border: 1px solid white;
+    background-color: var(--default-background-color);
+    border-radius: var(--default-border-radius);
+    transition: 200ms;
+}
+
+#unlockProductionSlotButton:hover {
+    transition: 200ms;
+}
+
+#unlockProductionSlotButton p {
+    padding: 0 5px 0 5px;
+}
+
+#unlockProductionSlotButton p span {
+    float: right;
+}

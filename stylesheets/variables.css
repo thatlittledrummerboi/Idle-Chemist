@@ -1,0 +1,6 @@
+:root {
+    --default-background-color: #101010;
+    --green-accent: rgb(0,165,0);
+    --red-accent: rgb(224, 0, 0);
+    --default-border-radius: 6px;
+}

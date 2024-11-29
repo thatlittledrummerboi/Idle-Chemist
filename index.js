@@ -19,10 +19,11 @@ function Player() {
     this.c = 299_792_458;
     this.baseEnergyMultiplier = 0.0000000000000000115;
     this.baseElementDivider = 32000000000000000;
-    this.energy = new Decimal(1000000000000);
+    this.energy = new Decimal(1000);
     this.elements = data.baseElements;
     this.stats = {
         bondsCrafted: {},
+        productionUnlocked: 1,
     };
     this.production = [{bond: '', cooldown: 0}, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null,];
     this.settings = {
@@ -249,8 +250,16 @@ function drawValues() {
         }
     }
 
-    if (game.currentPage == 3) {
-        document.getElement
+    if (game.currentPage == 4) {
+        document.getElementById('unlockProductionSlotButton').style.borderColor = player.energy.gte(getUpgradeCost('productionSlot')) ? "var(--green-accent)" : "var(--red-accent)";
+        document.getElementById('productionUnlockedCount').innerHTML = `${player.stats.productionUnlocked}/${player.production.length}`;
+    }
+}
+
+function getUpgradeCost(id) {
+    switch (id) {
+        case "productionSlot":
+            return new Decimal(10).pow(player.stats.productionUnlocked * 3)
     }
 }
 
@@ -289,7 +298,7 @@ function frame() {
 }
 
 function showPage(num) {
-    let pages = ["homePage", "craftingPage", "inventoryPage", "settingsPage"];
+    const pages = ["homePage", "craftingPage", "inventoryPage", "settingsPage", "upgradesPage"];
     for(let i = 0; i<pages.length; i++) document.getElementById(pages[i]).style = "display: none;";
     document.getElementById(pages[num]).style = "display: block";
 }
@@ -320,7 +329,7 @@ function load(payload) {
     }
 
     for (let item in player.stats.bondsCrafted) player.stats.bondsCrafted[item] = new Decimal(payload.stats.bondsCrafted[item]) ?? new Decimal(0);
-
+    player.stats.productionUnlocked = payload.stats.productionUnlocked;
 
     player.production = payload.production ?? [{bond: '', cooldown: 0}, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null,];
 
@@ -329,6 +338,32 @@ function load(payload) {
     player.timestampSinceLastTick = payload.timestampSinceLastTick;
     
     for (let delay in player.lastAutosaves) player.lastAutosaves[delay] = payload.lastAutosaves[delay];
+}
+
+function hover(item, h) {
+    if (h == "hover") {
+        switch (item) {
+            case 0:
+                document.getElementById('unlockProductionSlotButton').style.backgroundColor = player.energy.gte(getUpgradeCost('productionSlot')) ? "var(--green-accent)" : "";
+        }
+    }
+    else if (h == "unhover") {
+        switch (item) {
+            case 0:
+                document.getElementById('unlockProductionSlotButton').style.backgroundColor = "var(--default-background-color)";
+        }
+    }
+}
+
+function attemptUpgradePurchase(id) {
+    switch (id) {
+        case "productionSlot":
+            if (player.energy.gte(getUpgradeCost(id))) {
+                player.energy = player.energy.minus(getUpgradeCost(id));
+                player.stats.productionUnlocked++;
+                player.production[player.stats.productionUnlocked-1] = {bond: '', cooldown: 0};
+            }
+    }
 }
 
 function reset() {player = undefined; player = new Player; for (let item in data.bonds) player.stats.bondsCrafted[item] = new Decimal(0);}
@@ -352,6 +387,7 @@ window.onload = () => {
     document.getElementById('craftingPageButton').addEventListener("click", () => game.currentPage = 1);
     document.getElementById('inventoryPageButton').addEventListener("click", () => game.currentPage = 2);
     document.getElementById('settingsPageButton').addEventListener("click", () => game.currentPage = 3);
+    document.getElementById('upgradesPageButton').addEventListener("click", () => game.currentPage = 4);
     document.getElementById('reset').addEventListener("click", () => reset())
 
     // OVERVIEW
@@ -400,13 +436,18 @@ window.onload = () => {
     document.getElementById('exportToFile').addEventListener("click", () => save(1));
     document.getElementById('importSaveFromTextButton').addEventListener("click", () => {load(JSON.parse(document.getElementById('importSaveFromTextInput').value)); document.getElementById('importSaveFromTextInput').value = ""});
 
+    // UPGRADES
+    document.getElementById('unlockProductionSlotButton').addEventListener("mouseover", () => hover(0, "hover"));
+    document.getElementById('unlockProductionSlotButton').addEventListener("mouseout", () => hover(0, "unhover"));
+    document.getElementById('unlockProductionSlotButton').addEventListener("click", () => attemptUpgradePurchase("productionSlot"));
+
 
     // SETUP VARIABLES
     for (let item in data.bonds) player.stats.bondsCrafted[item] = new Decimal(0);
 
 
     // OTHER
-    //window.addEventListener("beforeunload", () => save(0, "default"))
+    window.addEventListener("beforeunload", () => save(0, "default"));
 
     showPage(0);
     showPage(1);
