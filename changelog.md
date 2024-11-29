@@ -9,6 +9,7 @@
   * Added Autosave System
 * Added Settings Menu
 * Added Loading screen
+* Added Overview Menu
 
 ### Version 0.2.1-BETA
 * Fixed bug: invalid crafting bond breaks production item
