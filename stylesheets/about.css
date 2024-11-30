@@ -1,0 +1,8 @@
+.aboutPage a {
+    color: red;
+    text-decoration: none;
+}
+
+.aboutPage a:hover {
+    color: rgb(173, 0, 0);
+}

@@ -1,0 +1,80 @@
+.craftingBondPreview {
+    width: 84%;
+    border: 1px solid white;
+    border-radius: var(--default-border-radius);
+    height: 40px;
+    display: flex;
+}
+
+.craftingBondPreviewText {
+    padding: 0 0 0 2px;
+    margin: 0;
+    font-size: 33px;
+}
+
+.craftingBondPreviewName {
+    margin: 0 0 0 auto;
+    padding: 10px 2px 0 0;
+}
+
+.craftingBondRegisterButton {
+    width: 40px;
+    margin-left: auto;
+}
+
+.craftingBondPreviewClearButton {
+    width: 40px;
+    margin-left: auto;
+}
+
+.craftingBondPreviewContainer {
+    display: flex;
+}
+
+.craftingBondPeriodicTable{
+    align-items: center;
+    justify-content: center;
+}
+
+.craftingBondPeriodicTableRow {
+    display: flex;
+}
+
+.craftingBondPeriodicTableRow img {
+    width: 4.6%;
+    min-width: 26px;
+    padding: 2px 2px 2px 2px;
+}
+
+.productionList {
+    border: 1px solid white;
+    border-radius: var(--default-border-radius);
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.productionList div {
+    width: 40px;
+    padding: 3px 0px 0px 3px;
+}
+
+.productionList div div {
+    position: relative;
+    text-align: center;
+}
+
+.productionList div div p {
+    position: absolute;
+    top: -2px;
+    left: 18%;
+}
+
+.productionList div div img {
+    width: 100%;
+}
+
+.productionList div progress {
+    width: 100%;
+    transform: translateX(3px);
+}
