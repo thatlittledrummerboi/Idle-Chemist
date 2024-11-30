@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="./stylesheets/inventory.css">
     <link rel="stylesheet" href="./stylesheets/settings.css">
     <link rel="stylesheet" href="./stylesheets/upgrades.css">
+    <link rel="stylesheet" href="./stylesheets/about.css">
 
     <link rel="shortcut icon" href="./img/favicon/favicon.ico" type="image/x-icon">
     <script type="module" src="./index.js"></script>
@@ -26,6 +27,9 @@
         <p>loading....</p>
     </div>
     <div class="game" id="game" style="display: none;">
+        <div id="modals">
+            
+        </div>
         <div class="topBar">
             <div style="background-color: rgb(0, 39, 37);">
                 <p id="energyDisplayVarCorner" >&Energy</p>
@@ -41,14 +45,14 @@
             <div id="inventoryPageButton">
                 <p>Inventory</p>
             </div>
-            <div id="settingsPageButton">
-                <p>Settings</p>
-            </div>
             <div id="upgradesPageButton">
                 <p>Upgrades</p>
             </div>
-            <div id="reset">
-                <p>reset</p>
+            <div id="settingsPageButton">
+                <p>Settings</p>
+            </div>
+            <div id="aboutPageButton">
+                <p>About</p>
             </div>
         </div>
         <br>
@@ -349,6 +353,12 @@
             <div id="unlockProductionSlotButton">
                 <p>Unlock Production Slot<span id="productionUnlockedCount">null/null</span></p>
             </div>
+        </div>
+        <div class="aboutPage page" id="aboutPage">
+            <h1 class="pageHeader">About</h2>
+            <p>Made by <a href="https://thatlittledrummerboi.github.io/">Little Drummer Boi</a></p>
+            <p>Version <span id="versionSpan">null</span></p>
+            <p><a href="https://github.com/thatlittledrummerboi/Idle-Chemist">GitHub Page</a></p>
         </div>
     </div>
 </body>

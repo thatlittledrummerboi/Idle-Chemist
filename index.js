@@ -5,7 +5,7 @@ import * as notationengine from "./modules/notationengine.js";
 
 // Setup for Object "game"
 var game = {
-    version: "v0.3-BETA-preview-2",
+    version: "0.3-BETA",
     currentPage: 0,
     craftingBondPreview: {text: ""},
     selectedProductionItem: null,
@@ -28,8 +28,8 @@ function Player() {
     this.production = [{bond: '', cooldown: 0}, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null,];
     this.settings = {
         framerate: 24,
+        ignoreTimestampFromSave: false,
     };
-    this.ignoreTimestampFromSave = false;
     this.timestampSinceLastTick = 0;
     this.version = "";
     this.lastAutosaves = {'30sec': 0, '5min': 0, '20min': 0, '1hr': 0}; // 30 sec, 5 min, 20 min, 1 hr
@@ -144,9 +144,9 @@ function updateValues() {
     }
 
     if (!game.checkedForSave) {
+        game.checkedForSave = true;
         let x = window.localStorage.getItem("default");
         if (x != undefined) load(JSON.parse(x));
-        game.checkedForSave = true;
     }
 
     game.currentTimestamp = Date.now();
@@ -254,12 +254,16 @@ function drawValues() {
         document.getElementById('unlockProductionSlotButton').style.borderColor = player.energy.gte(getUpgradeCost('productionSlot')) ? "var(--green-accent)" : "var(--red-accent)";
         document.getElementById('productionUnlockedCount').innerHTML = `${player.stats.productionUnlocked}/${player.production.length}`;
     }
+
+    if (game.currentPage == 5) {
+        document.getElementById('versionSpan').innerHTML = game.version;
+    }
 }
 
 function getUpgradeCost(id) {
     switch (id) {
         case "productionSlot":
-            return new Decimal(10).pow(player.stats.productionUnlocked * 3)
+            return new Decimal(10).pow(player.stats.productionUnlocked)
     }
 }
 
@@ -298,7 +302,7 @@ function frame() {
 }
 
 function showPage(num) {
-    const pages = ["homePage", "craftingPage", "inventoryPage", "settingsPage", "upgradesPage"];
+    const pages = ["homePage", "craftingPage", "inventoryPage", "settingsPage", "upgradesPage", "aboutPage"];
     for(let i = 0; i<pages.length; i++) document.getElementById(pages[i]).style = "display: none;";
     document.getElementById(pages[num]).style = "display: block";
 }
@@ -331,13 +335,20 @@ function load(payload) {
     for (let item in player.stats.bondsCrafted) player.stats.bondsCrafted[item] = new Decimal(payload.stats.bondsCrafted[item]) ?? new Decimal(0);
     player.stats.productionUnlocked = payload.stats.productionUnlocked;
 
-    player.production = payload.production ?? [{bond: '', cooldown: 0}, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null,];
+    for (let i = 0; i<player.production.length; i++) player.production[i] = payload.production[i];
 
     for (let setting in player.settings) player.settings[setting] = payload.settings[setting];
 
     player.timestampSinceLastTick = payload.timestampSinceLastTick;
     
     for (let delay in player.lastAutosaves) player.lastAutosaves[delay] = payload.lastAutosaves[delay];
+
+    // simulate ticks if player.settings.ignoreTimestampFromSave == true
+    if (!player.settings.ignoreTimestampFromSave) {
+        const missedTicks = (Date.now() - player.timestampSinceLastTick) / player.settings.framerate;
+        for (let i = 0; i < missedTicks; i++) updateValues();
+    }
+
 }
 
 function hover(item, h) {
@@ -388,7 +399,7 @@ window.onload = () => {
     document.getElementById('inventoryPageButton').addEventListener("click", () => game.currentPage = 2);
     document.getElementById('settingsPageButton').addEventListener("click", () => game.currentPage = 3);
     document.getElementById('upgradesPageButton').addEventListener("click", () => game.currentPage = 4);
-    document.getElementById('reset').addEventListener("click", () => reset())
+    document.getElementById('aboutPageButton').addEventListener("click", () => game.currentPage = 5);
 
     // OVERVIEW
     let z = "";
@@ -441,10 +452,11 @@ window.onload = () => {
     document.getElementById('unlockProductionSlotButton').addEventListener("mouseout", () => hover(0, "unhover"));
     document.getElementById('unlockProductionSlotButton').addEventListener("click", () => attemptUpgradePurchase("productionSlot"));
 
+    // ABOUT
+
 
     // SETUP VARIABLES
     for (let item in data.bonds) player.stats.bondsCrafted[item] = new Decimal(0);
-
 
     // OTHER
     window.addEventListener("beforeunload", () => save(0, "default"));

@@ -10,6 +10,7 @@
 * Added Settings Menu
 * Added Loading screen
 * Added Overview Menu
+* Added Offline Tick simulation
 
 ### Version 0.2.1-BETA
 * Fixed bug: invalid crafting bond breaks production item
