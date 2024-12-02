@@ -34,12 +34,6 @@ const bonds = {
             "H": 3,
         }
     },
-    "He2": {
-        name: "Helium Molecule",
-        elements: {
-            "He": 2,
-        }
-    },
 }
 
 const elements = {
