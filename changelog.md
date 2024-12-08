@@ -1,6 +1,10 @@
 # Version Log
 
-### Version 0.3-BETA (DRAFT)
+### Version 0.3.1-BETA
+* Fixed Bug where newly bought production slots only appear on reload
+* Reworked Notation System
+
+### Version 0.3-BETA
 * Added way to unlock production slots
 * Added more element unlocking requirements (to be balanced)
 * Worked on Save/Load system

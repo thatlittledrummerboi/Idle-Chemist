@@ -5,7 +5,7 @@ import * as notationengine from "./modules/notationengine.js";
 
 // Setup for Object "game"
 var game = {
-    version: "0.3-BETA",
+    version: "0.3.1-BETA",
     currentPage: 0,
     craftingBondPreview: {text: ""},
     selectedProductionItem: null,
@@ -211,8 +211,9 @@ function drawValues() {
         for (const elementKey in player.elements) document.getElementById(`element${elementKey}`).style.filter = player.elements[elementKey].unlocked ? "grayscale(0%)" : "grayscale(100%)";
 
         for (let i = 0; i<player.production.length; i++) {
-            if (player.production[i] == null) document.getElementById(`production${i+1}`).style.display = "none";
-            else if (player.production[i].bond == "") {
+            if (player.production[i] == null) { document.getElementById(`production${i+1}`).style.display = "none"; continue;}
+            else document.getElementById(`production${i+1}`).style.display = "block";
+            if (player.production[i].bond == "") {
                 document.getElementById(`production${i+1}Image`).src = "./img/button/production_empty.svg";
                 document.getElementById(`production${i+1}Progress`).removeAttribute('value');
                 document.getElementById(`production${i+1}Text`).innerHTML = "";
@@ -400,6 +401,7 @@ window.onload = () => {
     document.getElementById('settingsPageButton').addEventListener("click", () => game.currentPage = 3);
     document.getElementById('upgradesPageButton').addEventListener("click", () => game.currentPage = 4);
     document.getElementById('aboutPageButton').addEventListener("click", () => game.currentPage = 5);
+    document.getElementById('reset').addEventListener("click", () => reset());
 
     // OVERVIEW
     let z = "";
