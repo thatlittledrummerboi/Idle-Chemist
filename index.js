@@ -340,11 +340,12 @@ function load(payload) {
 
     for (let setting in player.settings) player.settings[setting] = payload.settings[setting];
 
-    player.timestampSinceLastTick = payload.timestampSinceLastTick;
+    player.timestampSinceLastTick = payload.timestampSinceLastTick ?? Date.now();
     
     for (let delay in player.lastAutosaves) player.lastAutosaves[delay] = payload.lastAutosaves[delay];
 
-    // simulate ticks if player.settings.ignoreTimestampFromSave == true
+
+    // simulate ticks if player.settings.ignoreTimestampFromSave == false
     if (!player.settings.ignoreTimestampFromSave) {
         const missedTicks = (Date.now() - player.timestampSinceLastTick) / player.settings.framerate;
         for (let i = 0; i < missedTicks; i++) updateValues();
